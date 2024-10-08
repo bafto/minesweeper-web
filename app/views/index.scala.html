@@ -1,6 +1,9 @@
-@(field: String)
+@(cells: Seq[(Int, Int, String)])
 
 @main("Minesweeper") {
-	<div>@field</div>
-	<button onclick="fetch('/reveal?x=1&y=1')">test button</button>
+	<div class="grid-container">
+		@for((x, y, cell) <- cells) {
+			<div class="cell" x="@x" y="@y">@cell</div>
+		}
+	</div>
 }
