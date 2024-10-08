@@ -1,5 +1,6 @@
-@()
+@(field: String)
 
-@main("Welcome to Play") {
-  <h1>Welcome to Play!</h1>
+@main("Minesweeper") {
+	<div>@field</div>
+	<button onclick="fetch('/reveal?x=1&y=1')">test button</button>
 }
