@@ -15,15 +15,17 @@ import scala.util.Failure
 import de.htwg.se.minesweeper.controller.Event
 import de.htwg.se.minesweeper.controller.LostEvent
 import de.htwg.se.minesweeper.controller.WonEvent
+import de.htwg.se.minesweeper.controller.SetupEvent
 
 class WonLostObserver extends Observer[Event] {
   var won: Boolean = false
   var lost: Boolean = false
   override def update(e: Event): Unit = {
     e match {
-      case WonEvent()  => won = true
-      case LostEvent() => lost = true
-      case _           => {}
+      case WonEvent()   => won = true
+      case LostEvent()  => lost = true
+      case SetupEvent() => reset()
+      case _            => {}
     }
   }
 
@@ -86,14 +88,11 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
   }
 
   def reveal(x: Int, y: Int) = Action {
-    println("revealed")
     minesweeperController.reveal(x, y)
     Ok("")
   }
 
   def retry() = Action {
-    println("retry")
-    wonLostObserver.reset()
     minesweeperController.setup()
     minesweeperController.startGame(10, 10, 0.3, 3)
     Ok("")
