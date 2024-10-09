@@ -2,7 +2,6 @@
   font-family: "Roboto Light", Arial, Helvetica, sans-serif;
 
   --text-color: #FFF;
-  --bg-light: #9E9E9E;
   --background-color: #757575;
   --bg-dark: #606060;
 }
@@ -59,6 +58,9 @@ main {
 #grid-container {
   display: grid;
   grid-template-columns: repeat(10, 32px);
+  padding: 1rem;
+  background-color: var(--bg-dark);
+  border-radius: 1rem;
 }
 
 .cell:hover {
@@ -70,11 +72,3 @@ footer {
   padding: 1rem;
   bottom: 0;
 }
-
-/* .grid-item { */
-/*   background-color: rgba(255, 255, 255, 0.8); */
-/*   border: 1px solid rgba(0, 0, 0, 0.8); */
-/*   padding: 20px; */
-/*   font-size: 30px; */
-/*   text-align: center; */
-/* } */
