@@ -44,8 +44,7 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
 
   val wonLostObserver = WonLostObserver()
   val minesweeperController = {
-    val controller =
-      MinesweeperController(RandomFieldFactory(Random()), FileIO())
+    val controller = MinesweeperController(RandomFieldFactory(Random()), FileIO())
     controller.setup()
     controller.startGame(10, 10, 0.3, 3)
     controller.addObserver(wonLostObserver)
@@ -96,5 +95,9 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
     minesweeperController.setup()
     minesweeperController.startGame(10, 10, 0.3, 3)
     Ok("")
+  }
+
+  def about() = Action {
+    Ok(views.html.about())
   }
 }
