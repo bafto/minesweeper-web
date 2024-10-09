@@ -3,7 +3,15 @@
 @main("Minesweeper") {
 	<div class="grid-container">
 		@for((x, y, cell) <- cells) {
-			<div class="cell" x="@x" y="@y">@cell</div>
+			<img
+				src="@routes.Assets.versioned("images/unrevealed.png")"
+				width="16px" height="16px"
+				class="cell"
+				x="@x" y="@y"
+				onclick="reveal(this)"
+			>
+			@cell
+			</img>
 		}
 	</div>
 }
