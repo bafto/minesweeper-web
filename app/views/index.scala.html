@@ -1,17 +1,19 @@
 @(cells: Seq[(Int, Int, String)])
 
 @main("Minesweeper") {
-	<div class="grid-container">
-		@for((x, y, cell) <- cells) {
-			<img
-				src="@routes.Assets.versioned("images/unrevealed.png")"
-				width="16px" height="16px"
-				class="cell"
-				x="@x" y="@y"
-				onclick="reveal(this)"
-			>
-			@cell
-			</img>
-		}
+	<div id="game">
+		<h2>Score: 0</h2>
+		<div id="grid-container">
+			@for((x, y, cell) <- cells) {
+				<img
+					src="@routes.Assets.versioned("images/unrevealed.png")"
+					alt="cell"
+					width="32px" height="32px"
+					class="cell"
+					x="@x" y="@y"
+					onclick="reveal(this)"
+				>
+			}
+		</div>
 	</div>
 }

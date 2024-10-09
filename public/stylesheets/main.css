@@ -7,6 +7,18 @@
   --bg-dark: #606060;
 }
 
+a:visited {
+  color: var(--text-color)
+}
+
+img[invert] {
+  filter: invert();
+}
+
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -18,21 +30,44 @@ header {
   display: flex;
   align-items: center;
   flex-direction: row;
-  text-decoration: none;
+  justify-content: space-between;
   background-color: var(--bg-dark);
+  padding: 0 1rem;
+}
+
+#header-title {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  text-decoration: none;
 }
 
 header #logo {
   margin-right: 1rem;
 }
 
-.grid-container {
+main {
+  padding: 1rem;
+}
+
+#game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#grid-container {
   display: grid;
-  grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
+  grid-template-columns: repeat(10, 32px);
+}
+
+.cell:hover {
+  filter: brightness(120%);
 }
 
 footer {
   position: absolute;
+  padding: 1rem;
   bottom: 0;
 }
 
