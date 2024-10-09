@@ -1,6 +1,39 @@
+:root {
+  font-family: "Roboto Light", Arial, Helvetica, sans-serif;
+
+  --text-color: #FFF;
+  --bg-light: #9E9E9E;
+  --background-color: #757575;
+  --bg-dark: #606060;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  text-decoration: none;
+  background-color: var(--bg-dark);
+}
+
+header #logo {
+  margin-right: 1rem;
+}
+
 .grid-container {
   display: grid;
   grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
 }
 
 /* .grid-item { */

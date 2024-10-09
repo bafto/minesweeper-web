@@ -18,11 +18,15 @@
     </head>
     <body>
         <header>
-            <h1><a href="/">Minesweeper</a></h1>
+            <a href="/"><img id="logo" src="@routes.Assets.versioned("images/favicon.png")" alt="minesweeper logo" width="32px" height="32px"></a>
+            <h1>Minesweeper</h1>
         </header>
+
         @* And here's where we render the `Html` object containing
          * the page content. *@
-        @content
+        <main>
+            @content
+        </main>
 
         <footer>
             <a href="/about">Über Minesweeper</a>
