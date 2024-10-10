@@ -1,0 +1,9 @@
+@main("Start Game") {
+<form action="/api/start_game" method="GET">
+	<input type="number" name="width" />
+	<input type="number" name="height" />
+	<input type="number" step="0.01" name="bomb_chance" />
+	<input type="number" name="max_undos" />
+	<button type="submit">Submit</button>
+</form>
+}

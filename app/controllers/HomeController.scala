@@ -16,58 +16,49 @@ import de.htwg.se.minesweeper.controller.Event
 import de.htwg.se.minesweeper.controller.LostEvent
 import de.htwg.se.minesweeper.controller.WonEvent
 import de.htwg.se.minesweeper.controller.SetupEvent
+import de.htwg.se.minesweeper.controller.StartGameEvent
 
-class WonLostObserver extends Observer[Event] {
-  var won: Boolean = false
-  var lost: Boolean = false
+enum GameState:
+  case NotStarted, Running, Won, Lost
+
+class GameObserver extends Observer[Event] {
+
+  private var state = GameState.NotStarted
   override def update(e: Event): Unit = {
     e match {
-      case WonEvent()   => won = true
-      case LostEvent()  => lost = true
-      case SetupEvent() => reset()
-      case _            => {}
+      case WonEvent()        => state = GameState.Won
+      case LostEvent()       => state = GameState.Lost
+      case SetupEvent()      => state = GameState.NotStarted
+      case StartGameEvent(_) => state = GameState.Running
+      case _                 => {}
     }
   }
 
-  def reset() = {
-    won = false
-    lost = false
-  }
+  def getState = state
 }
 
-/** This controller creates an `Action` to handle HTTP requests to the
-  * application's home page.
-  */
 @Singleton
 class HomeController @Inject() (val controllerComponents: ControllerComponents)
     extends BaseController {
 
-  val wonLostObserver = WonLostObserver()
+  val gameObserver = GameObserver()
   val minesweeperController = {
-    val controller = MinesweeperController(RandomFieldFactory(Random()), FileIO())
+    val controller =
+      MinesweeperController(RandomFieldFactory(Random()), FileIO())
     controller.setup()
-    controller.startGame(10, 10, 0.3, 3)
-    controller.addObserver(wonLostObserver)
+    controller.addObserver(gameObserver)
     controller
   }
 
   def fieldAsText() = minesweeperController.getGameState.field.toString()
 
-  /** Create an Action to render an HTML page.
-    *
-    * The configuration in the `routes` file means that this method will be
-    * called when the application receives a `GET` request with a path of `/`.
-    */
-  // def index() = Action {
-  //   Ok(views.html.index())
-  // }
-
   def minesweeper() = Action {
     val field = minesweeperController.getGameState.field
-    (wonLostObserver.won, wonLostObserver.lost) match {
-      case (true, false) => Ok(views.html.won())
-      case (false, true) => Ok(views.html.lost())
-      case (_, _) =>
+    gameObserver.getState match {
+      case GameState.Won        => Ok(views.html.won())
+      case GameState.Lost       => Ok(views.html.lost())
+      case GameState.NotStarted => Ok(views.html.start())
+      case GameState.Running =>
         Ok(
           views.html.index(
             for {
@@ -93,8 +84,17 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
 
   def retry() = Action {
     minesweeperController.setup()
-    minesweeperController.startGame(10, 10, 0.3, 3)
-    Ok("")
+    Redirect("/")
+  }
+
+  def start_game(
+      width: Int,
+      height: Int,
+      bomb_chance: Float,
+      max_undos: Int
+  ): Action[AnyContent] = Action {
+    minesweeperController.startGame(width, height, bomb_chance, max_undos)
+    Redirect("/")
   }
 
   def about() = Action {

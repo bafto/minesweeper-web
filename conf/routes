@@ -9,5 +9,7 @@ GET     /reveal                     controllers.HomeController.reveal(x:Int, y:I
 GET		/retry						controllers.HomeController.retry()
 GET     /about                      controllers.HomeController.about()
 
+GET 	/api/start_game 			controllers.HomeController.start_game(width: Int, height: Int, bomb_chance: Float, max_undos: Int)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
