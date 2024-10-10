@@ -1,0 +1,64 @@
+#settings {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#settings-inputs {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    width: 60%;
+    margin-bottom: 2rem;
+    row-gap: 5px;
+}
+
+#settings-inputs input {
+    border-color: var(--col-dark);
+    background-color: var(--col-x-dark);
+    color: white;
+    outline: none;
+    border-style: inset;
+}
+
+#range-wrapper {
+    display: grid;
+    grid-template-columns: auto 4ch;
+    gap: 10px;
+    align-items: center;
+}
+
+#settings-inputs input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    border-color: var(--col-dark);
+    background-color: var(--col-x-dark);
+    border-style: inset;
+    cursor: pointer;
+    width: 100%;
+    padding: 1px 0;
+    border-width: 2px;
+    margin: 0;
+}
+
+#settings-inputs input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 1rem;
+    width: 0.5rem;
+    border: 1px outset var(--col-dark);
+    background-color: var(--background-color);
+}
+
+
+#settings-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2rem;
+    width: 60%;
+}
+
+#settings-buttons button {
+    width: 100%;
+}

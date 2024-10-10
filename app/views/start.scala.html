@@ -1,9 +1,40 @@
 @main("Start Game") {
-<form action="/api/start_game" method="GET">
-	<input type="number" name="width" />
-	<input type="number" name="height" />
-	<input type="number" step="0.01" name="bomb_chance" />
-	<input type="number" name="max_undos" />
-	<button type="submit">Submit</button>
-</form>
+	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/settings.css")">
+	<form action="/api/start_game" method="GET" id="settings">
+		<h2>Board Settings</h2>
+		<div id="settings-inputs">
+			<label for="input-width">Board Width:</label>
+			<input type="number" required
+				name="width" id="input-width"
+				min="1" max="32" placeholder="10"
+			/>
+
+			<label for="input-height">Board Height:</label>
+			<input type="number" required
+				name="height" id="input-height"
+				min="1" max="32" placeholder="10"
+			/>
+
+			<label for="input-bomb_chance">Bomb Chance:</label>
+			<div id="range-wrapper">
+				<input type="range" required
+					name="bomb_chance" id="input-bomb_chance"
+					step="0.01" min="0" max="1"
+					oninput="this.nextElementSibling.value = `${(this.value * 100).toFixed(0)}%`"
+				/>
+				<output>50%</output>
+			</div>
+
+			<label for="input-max_undos">Max Undos:</label>
+			<input type="number" required
+				name="max_undos" id="input-max_undos"
+				min="0" max="10" placeholder="3"
+			/>
+		</div>
+
+		<div id="settings-buttons">
+			<button type="submit">Start Singleplayer</button>
+			<button type="submit" disabled title="Currently not implemented">Start Multiplayer</button>
+		</div>
+	</form>
 }

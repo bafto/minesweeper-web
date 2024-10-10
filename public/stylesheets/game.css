@@ -1,0 +1,32 @@
+#game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#grid-container {
+    display: grid;
+    grid-template-columns: repeat(10, 32px);
+    padding: 1rem;
+    background-color: var(--col-dark);
+    border-radius: 1rem;
+}
+
+.cell:hover {
+    filter: brightness(120%);
+}
+
+#button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    width: 50%;
+    gap: 10px;
+}
+
+#button-container button {
+    text-wrap: nowrap;
+    width: 100%
+}

@@ -1,6 +1,7 @@
 @(cells: Seq[(Int, Int, de.htwg.se.minesweeper.model.Cell)])
 
 @main("Minesweeper") {
+	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/game.css")">
 	<div id="game">
 		<h2>Score: 0</h2>
 		<div id="grid-container">
@@ -50,6 +51,11 @@
 					>
 				}
 			}
+		</div>
+		<div id="button-container">
+			<button>Go Back</button>
+			<button>Undo</button>
+			<button>Redo</button>
 		</div>
 	</div>
 }

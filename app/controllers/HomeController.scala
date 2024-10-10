@@ -50,7 +50,7 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
     controller
   }
 
-  def index_params = {
+  def game_params = {
     val field = minesweeperController.getGameState.field
     for {
       x <- 0 until field.dimension(0)
@@ -70,7 +70,7 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
       case GameState.Won        => Ok(views.html.won())
       case GameState.Lost       => Ok(views.html.lost())
       case GameState.NotStarted => Ok(views.html.start())
-      case GameState.Running    => Ok(views.html.index(index_params))
+      case GameState.Running    => Ok(views.html.game(game_params))
     }
   }
 
