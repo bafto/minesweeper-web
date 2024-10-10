@@ -6,7 +6,6 @@
 
 #grid-container {
     display: grid;
-    grid-template-columns: repeat(10, 32px);
     padding: 1rem;
     background-color: var(--col-dark);
     border-radius: 1rem;
