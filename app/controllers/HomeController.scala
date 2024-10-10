@@ -50,30 +50,27 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
     controller
   }
 
-  def fieldAsText() = minesweeperController.getGameState.field.toString()
+  def index_params = {
+    val field = minesweeperController.getGameState.field
+    for {
+      x <- 0 until field.dimension(0)
+      y <- 0 until field.dimension(1)
+    } yield (
+      x,
+      y,
+      field.getCell(x, y) match {
+        case Success(c) => c
+        case Failure(e) => throw RuntimeException(e)
+      }
+    )
+  }
 
   def minesweeper() = Action {
-    val field = minesweeperController.getGameState.field
     gameObserver.getState match {
       case GameState.Won        => Ok(views.html.won())
       case GameState.Lost       => Ok(views.html.lost())
       case GameState.NotStarted => Ok(views.html.start())
-      case GameState.Running =>
-        Ok(
-          views.html.index(
-            for {
-              x <- 0 until field.dimension(0)
-              y <- 0 until field.dimension(1)
-            } yield (
-              x,
-              y,
-              field.getCell(x, y) match {
-                case Success(c) => c.toString()
-                case Failure(e) => e.toString()
-              }
-            )
-          )
-        )
+      case GameState.Running    => Ok(views.html.index(index_params))
     }
   }
 

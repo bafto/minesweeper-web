@@ -1,18 +1,54 @@
-@(cells: Seq[(Int, Int, String)])
+@(cells: Seq[(Int, Int, de.htwg.se.minesweeper.model.Cell)])
 
 @main("Minesweeper") {
 	<div id="game">
 		<h2>Score: 0</h2>
 		<div id="grid-container">
 			@for((x, y, cell) <- cells) {
-				<img
-					src="@routes.Assets.versioned("images/unrevealed.png")"
-					alt="cell"
-					width="32px" height="32px"
-					class="cell"
-					x="@x" y="@y"
-					onclick="reveal(this)"
-				>
+				@if(cell.isRevealed){
+					@if(cell.isBomb) {
+						<img
+							src="@routes.Assets.versioned("images/bomb.png")"
+							alt="cell"
+							width="32px" height="32px"
+							class="cell"
+							x="@x" y="@y"
+						>
+					} else if (cell.nearbyBombs == 0) {
+						<img
+							src="@routes.Assets.versioned("images/revealed.png")"
+							alt="cell"
+							width="32px" height="32px"
+							class="cell"
+							x="@x" y="@y"
+						>
+					} else {
+						<img
+							src="@routes.Assets.versioned("images/" + cell.nearbyBombs.toString + ".png")"
+							alt="cell"
+							width="32px" height="32px"
+							class="cell"
+							x="@x" y="@y"
+						>
+					}
+				} else if (cell.isFlagged) {
+					<img
+						src="@routes.Assets.versioned("images/flagged.png")"
+						alt="cell"
+						width="32px" height="32px"
+						class="cell"
+						x="@x" y="@y"
+					>
+				} else {
+					<img
+						src="@routes.Assets.versioned("images/unrevealed.png")"
+						alt="cell"
+						width="32px" height="32px"
+						class="cell"
+						x="@x" y="@y"
+						onclick="reveal(this)"
+					>
+				}
 			}
 		</div>
 	</div>
