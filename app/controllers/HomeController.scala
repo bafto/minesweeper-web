@@ -17,6 +17,7 @@ import de.htwg.se.minesweeper.controller.LostEvent
 import de.htwg.se.minesweeper.controller.WonEvent
 import de.htwg.se.minesweeper.controller.SetupEvent
 import de.htwg.se.minesweeper.controller.StartGameEvent
+import de.htwg.se.minesweeper.model.Cell
 
 enum GameState:
   case NotStarted, Running, Won, Lost
@@ -37,6 +38,12 @@ class GameObserver extends Observer[Event] {
   def getState = state
 }
 
+case class GameViewParams(
+    val width: Int,
+    val height: Int,
+    val cells: Seq[(Int, Int, Cell)]
+);
+
 @Singleton
 class HomeController @Inject() (val controllerComponents: ControllerComponents)
     extends BaseController {
@@ -52,16 +59,20 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
 
   def game_params = {
     val field = minesweeperController.getGameState.field
-    for {
-      x <- 0 until field.dimension(0)
-      y <- 0 until field.dimension(1)
-    } yield (
-      x,
-      y,
-      field.getCell(x, y) match {
-        case Success(c) => c
-        case Failure(e) => throw RuntimeException(e)
-      }
+    GameViewParams(
+      field.dimension(0),
+      field.dimension(1),
+      for {
+        x <- 0 until field.dimension(0)
+        y <- 0 until field.dimension(1)
+      } yield (
+        x,
+        y,
+        field.getCell(x, y) match {
+          case Success(c) => c
+          case Failure(e) => throw RuntimeException(e)
+        }
+      )
     )
   }
 

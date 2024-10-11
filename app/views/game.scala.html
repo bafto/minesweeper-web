@@ -1,11 +1,11 @@
-@(cells: Seq[(Int, Int, de.htwg.se.minesweeper.model.Cell)])
+@(params: GameViewParams)
 
 @main("Minesweeper") {
 	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/game.css")">
 	<div id="game">
 		<h2>Score: 0</h2>
-		<div id="grid-container" style="grid-template-columns: repeat(@Math.sqrt(cells.length).toInt, 32px);">
-			@for((x, y, cell) <- cells) {
+		<div id="grid-container" style="grid-template-columns: repeat(@Math.sqrt(params.width * params.height).toInt, 32px);">
+			@for((x, y, cell) <- params.cells) {
 				@if(cell.isRevealed){
 					@if(cell.isBomb) {
 						<img
