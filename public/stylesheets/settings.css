@@ -29,8 +29,8 @@
     align-items: center;
 }
 
+/* style für den slider */
 #settings-inputs input[type="range"] {
-    -webkit-appearance: none;
     appearance: none;
     border-color: var(--col-dark);
     background-color: var(--col-x-dark);
@@ -42,14 +42,28 @@
     margin: 0;
 }
 
-#settings-inputs input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
+/*  Style muss leider kopiert werden, da selector lists ignoriert werden,
+    wenn ein pseudo element, welches der Browser nicht kennt, vorhanden ist */
+
+/* Slider Thumb style für webkit browsers */
+#settings-inputs input[type=range]::-webkit-slider-thumb {
+    appearance: none;
     height: 1rem;
     width: 0.5rem;
     border: 1px outset var(--col-dark);
     background-color: var(--background-color);
+    border-radius: 2px;
 }
 
+/* Slider Thumb für Firefox */
+#settings-inputs input[type=range]::-moz-range-thumb {
+    appearance: none;
+    height: 1rem;
+    width: 0.5rem;
+    border: 1px outset var(--col-dark);
+    background-color: var(--background-color);
+    border-radius: 2px;
+}
 
 #settings-buttons {
     display: flex;

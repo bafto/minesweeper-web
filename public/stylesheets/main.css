@@ -1,12 +1,13 @@
 :root {
     font-family: "Roboto Light", Arial, Helvetica, sans-serif;
 
-    --text-color: #FFF;
-    --background-color: #757575;
-    --col-dark: #606060;
-    --col-x-dark: #3f3f3f;
+    --text-color: #dedee3;
+    --background-color: #333;
+    --col-dark: #222;
+    --col-x-dark: #444;
 }
 
+:link,
 a:visited {
     color: var(--text-color)
 }
