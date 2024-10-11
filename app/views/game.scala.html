@@ -4,7 +4,7 @@
 	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/game.css")">
 	<div id="game">
 		<h2>Score: 0</h2>
-		<div id="grid-container" style="grid-template-columns: repeat(@Math.sqrt(params.width * params.height).toInt, 32px);">
+		<div id="grid-container" style="grid-template-columns: repeat(@params.height, 32px); grid-template-rows: repeat(@params.width, 32px);">
 			@for((x, y, cell) <- params.cells) {
 				@if(cell.isRevealed){
 					@if(cell.isBomb) {
@@ -53,7 +53,7 @@
 			}
 		</div>
 		<div id="button-container">
-			<button onclick="retry()">Go Back</button>
+			<button onclick="main_menu()">Main Menu</button>
 			<button onclick="undo()">Undo</button>
 			<button onclick="redo()">Redo</button>
 		</div>

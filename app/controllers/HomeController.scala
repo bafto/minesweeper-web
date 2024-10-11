@@ -100,8 +100,20 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
     Ok("")
   }
 
-  def retry() = Action {
+  def restart() = Action {
     minesweeperController.setup()
+    Redirect("/")
+  }
+
+  def retry() = Action {
+    val gameState = minesweeperController.getGameState
+    minesweeperController.setup()
+    minesweeperController.startGame(
+      gameState.width,
+      gameState.height,
+      gameState.bombChance,
+      gameState.maxUndos
+    )
     Redirect("/")
   }
 
