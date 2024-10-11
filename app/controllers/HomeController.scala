@@ -90,6 +90,16 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
     Ok("")
   }
 
+  def undo() = Action {
+    minesweeperController.undo() // TODO: return error
+    Ok("")
+  }
+
+  def redo() = Action {
+    minesweeperController.redo() // TODO: return error
+    Ok("")
+  }
+
   def retry() = Action {
     minesweeperController.setup()
     Redirect("/")
