@@ -14,55 +14,11 @@
     row-gap: 5px;
 }
 
-#settings-inputs input {
-    border-color: var(--col-dark);
-    background-color: var(--col-x-dark);
-    color: white;
-    outline: none;
-    border-style: inset;
-}
-
 #range-wrapper {
     display: grid;
     grid-template-columns: auto 4ch;
     gap: 10px;
     align-items: center;
-}
-
-/* style für den slider */
-#settings-inputs input[type="range"] {
-    appearance: none;
-    border-color: var(--col-dark);
-    background-color: var(--col-x-dark);
-    border-style: inset;
-    cursor: pointer;
-    width: 100%;
-    padding: 1px 0;
-    border-width: 2px;
-    margin: 0;
-}
-
-/*  Style muss leider kopiert werden, da selector lists ignoriert werden,
-    wenn ein pseudo element, welches der Browser nicht kennt, vorhanden ist */
-
-/* Slider Thumb style für webkit browsers */
-#settings-inputs input[type=range]::-webkit-slider-thumb {
-    appearance: none;
-    height: 1rem;
-    width: 0.5rem;
-    border: 1px outset var(--col-dark);
-    background-color: var(--background-color);
-    border-radius: 2px;
-}
-
-/* Slider Thumb für Firefox */
-#settings-inputs input[type=range]::-moz-range-thumb {
-    appearance: none;
-    height: 1rem;
-    width: 0.5rem;
-    border: 1px outset var(--col-dark);
-    background-color: var(--background-color);
-    border-radius: 2px;
 }
 
 #settings-buttons {
