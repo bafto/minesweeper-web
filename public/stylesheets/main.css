@@ -38,6 +38,7 @@ header {
     justify-content: space-between;
     background-color: var(--dark-color);
     padding: 0 1rem;
+    height: 80px;
 }
 
 #header-title {
@@ -45,10 +46,10 @@ header {
     align-items: center;
     flex-direction: row;
     text-decoration: none;
+    gap: 1rem;
 }
 
 header #logo {
-    margin-right: 1rem;
     transition: transform 1s ease;
 }
 
