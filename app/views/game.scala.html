@@ -9,7 +9,7 @@
 		}
 	</style>
 	<div id="game">
-		<h2>Score: 0</h2>
+		<h2>Time: <span id="time">0</span>s</h2>
 		<div id="grid-container">
 			@for((x, y, cell) <- params.cells) {
 				@if(cell.isRevealed){

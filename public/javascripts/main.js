@@ -1,3 +1,8 @@
+document.addEventListener('DOMContentLoaded', () => {
+	let time = document.getElementById('time');
+	setInterval(() => time.innerHTML = `${Number.parseInt(time.innerHTML) + 1}`, 1000)
+})
+
 function reload_page() {
 	window.location.reload()
 }
