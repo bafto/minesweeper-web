@@ -25,23 +25,30 @@ enum GameState:
 class GameObserver extends Observer[Event] {
 
   private var state = GameState.NotStarted
+  private var start_time = current_time_seconds
   override def update(e: Event): Unit = {
     e match {
-      case WonEvent()        => state = GameState.Won
-      case LostEvent()       => state = GameState.Lost
-      case SetupEvent()      => state = GameState.NotStarted
-      case StartGameEvent(_) => state = GameState.Running
-      case _                 => {}
+      case WonEvent()   => state = GameState.Won
+      case LostEvent()  => state = GameState.Lost
+      case SetupEvent() => state = GameState.NotStarted
+      case StartGameEvent(_) => {
+        state = GameState.Running
+        start_time = current_time_seconds
+      }
+      case _ => {}
     }
   }
 
+  private def current_time_seconds = System.currentTimeMillis() / 1000;
   def getState = state
+  def getTime = current_time_seconds - start_time
 }
 
 case class GameViewParams(
     val width: Int,
     val height: Int,
-    val cells: Seq[(Int, Int, Cell)]
+    val cells: Seq[(Int, Int, Cell)],
+    val elapsed: Long
 );
 
 @Singleton
@@ -72,14 +79,15 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
           case Success(c) => c
           case Failure(e) => throw RuntimeException(e)
         }
-      )
+      ),
+      gameObserver.getTime
     )
   }
 
   def minesweeper() = Action {
     gameObserver.getState match {
-      case GameState.Won        => Ok(views.html.won())
-      case GameState.Lost       => Ok(views.html.lost())
+      case GameState.Won        => Ok(views.html.won(gameObserver.getTime))
+      case GameState.Lost       => Ok(views.html.lost(gameObserver.getTime))
       case GameState.NotStarted => Ok(views.html.start())
       case GameState.Running    => Ok(views.html.game(game_params))
     }
@@ -87,6 +95,11 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
 
   def reveal(x: Int, y: Int) = Action {
     minesweeperController.reveal(x, y)
+    Ok("")
+  }
+
+  def flag(x: Int, y: Int) = Action {
+    minesweeperController.flag(x, y)
     Ok("")
   }
 

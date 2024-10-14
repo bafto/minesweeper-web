@@ -1,7 +1,8 @@
-@()
+@(elapsed: Long)
 
 @main("You Lost!") {
 <h1>You Lost!</h1>
+<p>And it only took you @elapsed seconds!</p>
 <button onclick="retry()">Retry</button>
 <button onclick="main_menu()">Main Menu</button>
 }
