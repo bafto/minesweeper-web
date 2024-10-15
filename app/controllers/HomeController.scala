@@ -70,8 +70,8 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
       field.dimension(0),
       field.dimension(1),
       for {
-        x <- 0 until field.dimension(0)
         y <- 0 until field.dimension(1)
+        x <- 0 until field.dimension(0)
       } yield (
         x,
         y,

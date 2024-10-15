@@ -17,7 +17,7 @@ function reveal(cell) {
 		.then(reload_page);
 }
 
-async function flag(cell) {
+function flag(cell) {
 	console.log('flag');
 	fetch(`/api/flag?x=${cell.getAttribute('x')}&y=${cell.getAttribute('y')}`)
 		.then(reload_page);
