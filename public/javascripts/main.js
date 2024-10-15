@@ -12,13 +12,11 @@ function reload_page() {
 }
 
 function reveal(cell) {
-	console.log('click');
 	fetch(`/api/reveal?x=${cell.getAttribute('x')}&y=${cell.getAttribute('y')}`)
 		.then(reload_page);
 }
 
 function flag(cell) {
-	console.log('flag');
 	fetch(`/api/flag?x=${cell.getAttribute('x')}&y=${cell.getAttribute('y')}`)
 		.then(reload_page);
 	return false;
