@@ -139,14 +139,17 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
     Redirect("/")
   }
 
-  def start_game(
-      width: Int,
-      height: Int,
-      bomb_chance: Float,
-      max_undos: Int
-  ): Action[AnyContent] = Action {
-    minesweeperController.startGame(width, height, bomb_chance, max_undos)
-    Redirect("/")
+  def start_game(): Action[JsValue] = Action(parse.json) {
+    (request: Request[JsValue]) =>
+      {
+        minesweeperController.startGame(
+          (request.body \ "width").as[Int],
+          (request.body \ "height").as[Int],
+          (request.body \ "bomb_chance").as[Float],
+          (request.body \ "max_undos").as[Int]
+        )
+        Redirect("/")
+      }
   }
 
   def about() = Action {

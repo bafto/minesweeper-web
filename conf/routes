@@ -11,7 +11,7 @@ GET     /api/reveal                 controllers.HomeController.reveal(x:Int, y:I
 GET		/api/flag					controllers.HomeController.flag(x:Int, y:Int)
 GET		/api/retry					controllers.HomeController.retry()
 GET		/api/restart				controllers.HomeController.restart()
-GET 	/api/start_game 			controllers.HomeController.start_game(width: Int, height: Int, bomb_chance: Float, max_undos: Int)
+POST 	/api/start_game 			controllers.HomeController.start_game()
 GET 	/api/undo		 			controllers.HomeController.undo()
 GET 	/api/redo 					controllers.HomeController.redo()
 
