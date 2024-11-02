@@ -4,6 +4,13 @@
     align-items: center;
 }
 
+#stat-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+}
+
 #grid-container {
     display: grid;
     grid-template-columns: repeat(var(--grid-width), 32px);
