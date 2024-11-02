@@ -86,6 +86,7 @@ async function reveal(cell) {
 }
 
 async function flag(cell) {
+	event.preventDefault();
 	const xy = getCellXY(cell);
 	const resp = await fetch(`/api/flag?x=${xy.x}&y=${xy.y}`);
 	if (!resp.ok) {
