@@ -1,11 +1,23 @@
 @(params: GameViewParams)
 
 @main("Minesweeper") {
-	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/game.css")">
 	<style>
 		:root {
 			--grid-width: @params.width;
 			--grid-height: @params.height;
+		}
+
+		#grid-container {
+			display: grid;
+			grid-template-columns: repeat(var(--grid-width), 32px);
+			grid-template-rows: repeat(var(--grid-height), 32px);
+			padding: 1rem;
+			background-color: var(--dark-color);
+			border-radius: 1rem;
+		}
+
+		.cell:hover {
+			filter: brightness(120%);
 		}
 	</style>
 	<script>
@@ -13,8 +25,8 @@
 		console.log(imageBasePath);
 	</script>
     <script defer src="@routes.Assets.versioned("javascripts/game.js")" type="text/javascript"></script>
-	<div id="game">
-		<div id="stat-container">
+	<div class="d-flex flex-column align-items-center">
+		<div class="d-flex flex-row align-items-center gap-4">
 			<h2>Time: <span id="time">@params.elapsed</span>s</h2>
 			<h2>Undos: <span id="undos">@params.undos</span></h2>
 		</div>
@@ -68,10 +80,10 @@
 				}
 			}
 		</div>
-		<div id="button-container">
-			<button onclick="main_menu()">Main Menu</button>
-			<button onclick="undo()">Undo</button>
-			<button onclick="redo()">Redo</button>
+		<div class="d-flex flex-row justify-content-between align-items-center mt-4 w-50 gap-2">
+			<button class="btn w-100 text-nowrap" onclick="main_menu()">Main Menu</button>
+			<button class="btn w-100 text-nowrap" onclick="undo()">Undo</button>
+			<button class="btn w-100 text-nowrap" onclick="redo()">Redo</button>
 		</div>
 	</div>
 }
