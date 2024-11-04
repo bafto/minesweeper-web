@@ -1,4 +1,9 @@
 @main("Start Game") {
+<style>
+	.invalid {
+		border-color: var(--bs-red) !important;
+	}
+</style>
 <script defer src="@routes.Assets.versioned("javascripts/start.js")" type="text/javascript"></script>
 <form class="d-flex flex-column justify-content-center align-items-center gap-4" onsubmit="return false;">
 	<h2>Board Settings</h2>
