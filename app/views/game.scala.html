@@ -11,9 +11,6 @@
 			display: grid;
 			grid-template-columns: repeat(var(--grid-width), 32px);
 			grid-template-rows: repeat(var(--grid-height), 32px);
-			padding: 1rem;
-			background-color: var(--dark-color);
-			border-radius: 1rem;
 		}
 
 		.cell:hover {
@@ -30,7 +27,7 @@
 			<h2>Time: <span id="time">@params.elapsed</span>s</h2>
 			<h2>Undos: <span id="undos">@params.undos</span></h2>
 		</div>
-		<div id="grid-container">
+		<div id="grid-container" class="p-3 rounded-4 bg-primary">
 			@for((x, y, cell) <- params.cells) {
 				@if(cell.isRevealed){
 					@if(cell.isBomb) {

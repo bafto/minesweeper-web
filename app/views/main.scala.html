@@ -19,10 +19,15 @@
                 --bs-primary-rgb: 22, 22, 22;
                 --bs-secondary-rgb: 44, 44, 44;
             }
+            .btn {
+                --bs-btn-border-color: white;
+                --bs-btn-hover-border-color: white;
+                --bs-btn-hover-bg: #8c8c8c8c
+            }
         </style>
     </head>
 
-    <body class="h-100 m-0 p-0">
+    <body class="d-flex flex-column justify-content-between h-100 m-0 p-0">
         <header class="bg-primary d-flex flex-row justify-content-between align-items-center px-3" style="height: 80px">
             <div class="d-flex flex-row align-items-center text-decoration-none gap-3">
                 <a href="/"><img id="logo" src="@routes.Assets.versioned("images/favicon.png")" alt="minesweeper logo" width="32px" height="32px" title="go back"></a>
@@ -35,7 +40,7 @@
             </div>
         </header>
 
-        <main class="p-3 h-100">
+        <main class="p-3">
             @content
         </main>
 

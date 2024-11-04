@@ -1,0 +1,13 @@
+@(elapsed: Long, state: String)
+
+@main("Game end") {
+    <div class="d-flex flex-column align-items-center">
+        <h1>You @state!</h1>
+        <p>And it only took you @elapsed seconds!</p>
+        <div class="d-flex flex-row gap-3">
+            <button class="btn" onclick="retry()">Retry</button>
+            <button class="btn" onclick="main_menu()">Main Menu</button>
+        </div>
+
+    </div>
+}
