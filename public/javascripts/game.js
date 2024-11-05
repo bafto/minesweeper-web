@@ -1,5 +1,6 @@
 let elapsed = 0;
 const timeElement = document.getElementById('time');
+let gameSocket = null;
 
 function createTimer(startTime) {
 	elapsed = startTime;
@@ -11,16 +12,10 @@ function createTimer(startTime) {
 
 document.addEventListener('DOMContentLoaded', () => {
 	createTimer(Number.parseInt(timeElement.innerHTML));
+	gameSocket = connectToWs();
 })
 
 async function updateGame(state) {
-	// if won/lost, reload the page to get to the
-	// won/lost views
-	if (state.won || state.lost) {
-		reload_page();
-		return;
-	}
-
 	// update the cells
 	for (const cell of state.cells) {
 		const cellImg = document.querySelector(`[x="${cell.x}"][y="${cell.y}"]`)
@@ -76,44 +71,57 @@ function getCellXY(cell) {
 
 async function reveal(cell) {
 	const xy = getCellXY(cell);
-	const resp = await fetch(`/api/reveal?x=${xy.x}&y=${xy.y}`);
-	if (!resp.ok) {
-		console.err("something went wrong revealing!");
-		return;
-	}
-	const state = await resp.json();
-	updateGame(state);
+	gameSocket.send(JSON.stringify({
+		type: "reveal",
+		data: {
+			x: Number.parseInt(xy.x),
+			y: Number.parseInt(xy.y),
+		}
+	}));
 }
 
 async function flag(cell) {
 	event.preventDefault();
 	const xy = getCellXY(cell);
-	const resp = await fetch(`/api/flag?x=${xy.x}&y=${xy.y}`);
-	if (!resp.ok) {
-		console.err("something went wrong flagging!");
-		return;
-	}
-	const state = await resp.json();
-	updateGame(state);
+	gameSocket.send(JSON.stringify({
+		type: "flag",
+		data: {
+			x: Number.parseInt(xy.x),
+			y: Number.parseInt(xy.y),
+		}
+	}));
 	return false;
 }
 
 async function undo() {
-	const resp = await fetch('/api/undo');
-	if (!resp.ok) {
-		console.err("something went wrong undoing!");
-		return;
-	}
-	const state = await resp.json();
-	updateGame(state);
+	gameSocket.send(JSON.stringify({
+		"type": "undo"
+	}));
 }
 
 async function redo() {
-	const resp = await fetch('/api/redo');
-	if (!resp.ok) {
-		console.err("something went wrong redoing!");
+	gameSocket.send(JSON.stringify({
+		"type": "redo"
+	}));
+}
+
+function connectToWs() {
+	const socket = new WebSocket("ws://localhost:9000/api/ws")
+	socket.onopen = () => console.log("ws open");
+	socket.onclose = () => console.log("ws close");
+	socket.onerror = () => console.error("ws error");
+	socket.onmessage = handleWsMessage;
+
+	return socket;
+}
+
+function handleWsMessage(msg) {
+	const state = JSON.parse(msg.data);
+
+	if (state.reload) {
+		reload_page();
 		return;
 	}
-	const state = await resp.json();
+
 	updateGame(state);
 }
