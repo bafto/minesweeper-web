@@ -35,6 +35,10 @@
     text-wrap: nowrap;
 }
 
+.invalid {
+	border-color: var(--red) !important;
+}
+
 @media screen and (max-width: 425px) {
     #settings-inputs {
         grid-template-columns: none;
