@@ -45,6 +45,7 @@ class MinesweeperWebSocketActor(
   override def receive = {
     case msg: JsValue => {
       (msg \ "type").get.as[String] match {
+        case "open" => out ! gameStateJson
         case "undo" => undo()
         case "redo" => redo()
         case "flag" =>
@@ -78,12 +79,14 @@ class MinesweeperWebSocketActor(
       case WonEvent() | LostEvent() | SetupEvent() =>
         out ! Json.obj("reload" -> JsBoolean(true))
       case StartGameEvent(_) | FieldUpdatedEvent(_) =>
-        out ! gameStateWrites
-          .writes(controller.getGameState)
-          .as[JsObject] + ("timer" -> JsNumber(gameObserver.getTime))
+        out ! gameStateJson
       case _ => {}
     }
   }
+
+  private def gameStateJson = gameStateWrites
+    .writes(controller.getGameState)
+    .as[JsObject] + ("timer" -> JsNumber(gameObserver.getTime))
 }
 
 object MinesweeperWebSocketActorFactory {

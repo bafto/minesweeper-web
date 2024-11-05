@@ -51,14 +51,6 @@ class GameObserver extends Observer[Event] {
   def getTime = current_time_seconds - start_time
 }
 
-case class GameViewParams(
-    val width: Int,
-    val height: Int,
-    val cells: Seq[(Int, Int, Cell)],
-    val elapsed: Long,
-    val undos: Int
-);
-
 @Singleton
 class HomeController @Inject() (val controllerComponents: ControllerComponents)(
     implicit val system: ActorSystem
@@ -73,33 +65,12 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
     controller
   }
 
-  def game_params = {
-    val field = minesweeperController.getGameState.field
-    GameViewParams(
-      field.dimension(0),
-      field.dimension(1),
-      for {
-        y <- 0 until field.dimension(1)
-        x <- 0 until field.dimension(0)
-      } yield (
-        x,
-        y,
-        field.getCell(x, y) match {
-          case Success(c) => c
-          case Failure(e) => throw RuntimeException(e)
-        }
-      ),
-      gameObserver.getTime,
-      minesweeperController.getGameState.undos
-    )
-  }
-
   def minesweeper() = Action {
     gameObserver.getState match {
       case GameState.Won        => Ok(views.html.won(gameObserver.getTime))
       case GameState.Lost       => Ok(views.html.lost(gameObserver.getTime))
       case GameState.NotStarted => Ok(views.html.start())
-      case GameState.Running    => Ok(views.html.game(game_params))
+      case GameState.Running    => Ok(views.html.game())
     }
   }
 

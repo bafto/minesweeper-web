@@ -11,11 +11,17 @@ function createTimer(startTime) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	createTimer(Number.parseInt(timeElement.innerHTML));
 	gameSocket = connectToWs();
 })
 
+const grid = document.getElementById('grid-container');
+
 async function updateGame(state) {
+	if (!grid.hasChildNodes()) {
+		createGrid(state);
+		return;
+	}
+
 	// update the cells
 	for (const cell of state.cells) {
 		const cellImg = document.querySelector(`[x="${cell.x}"][y="${cell.y}"]`)
@@ -29,6 +35,39 @@ async function updateGame(state) {
 
 	// update the undos
 	document.getElementById('undos').innerText = state.undos;
+}
+
+function createGrid(state) {
+	// update the cells
+	for (const cell of state.cells) {
+		const cellImg = document.createElement('img');
+		const cellData = getCellImgClass(cell.cell)
+
+		cellImg.setAttribute("src", cellData.img);
+		cellImg.className = "cell " + cellData.class;
+
+		cellImg.setAttribute('alt', 'cell');
+		cellImg.setAttribute('width', '32px');
+		cellImg.setAttribute('height', '32px');
+		cellImg.setAttribute('x', cell.x);
+		cellImg.setAttribute('y', cell.y);
+
+		cellImg.addEventListener('click', (e) => reveal(e.target));
+		if (cellData.class === 'unrevealed' || cellData.class === 'flagged') {
+			cellImg.addEventListener('contextmenu', (e) => flag(e.target));
+		}
+
+		grid.appendChild(cellImg);
+	}
+
+	createTimer(state.timer);
+
+	// update the undos
+	document.getElementById('undos').innerText = state.undos;
+
+	const root = document.querySelector(':root');
+	root.style.setProperty('--grid-width', state.width);
+	root.style.setProperty('--grid-height', state.height);
 }
 
 function getCellImgClass(cell) {
@@ -107,7 +146,10 @@ async function redo() {
 
 function connectToWs() {
 	const socket = new WebSocket("ws://localhost:9000/api/ws")
-	socket.onopen = () => console.log("ws open");
+	socket.onopen = () => {
+		console.log("ws open");
+		socket.send(JSON.stringify({ type: "open" }));
+	};
 	socket.onclose = () => console.log("ws close");
 	socket.onerror = () => console.error("ws error");
 	socket.onmessage = handleWsMessage;
