@@ -54,7 +54,7 @@ function createGrid(state) {
 
 		cellImg.addEventListener('click', (e) => reveal(e.target));
 		if (cellData.class === 'unrevealed' || cellData.class === 'flagged') {
-			cellImg.addEventListener('contextmenu', (e) => flag(e.target));
+			cellImg.addEventListener('contextmenu', (e) => flag(e));
 		}
 
 		grid.appendChild(cellImg);
@@ -119,8 +119,9 @@ async function reveal(cell) {
 	}));
 }
 
-async function flag(cell) {
+async function flag(event) {
 	event.preventDefault();
+	const cell = event.target;
 	const xy = getCellXY(cell);
 	gameSocket.send(JSON.stringify({
 		type: "flag",
