@@ -25,6 +25,9 @@ import play.api.libs.json.JsBoolean
 import play.api.libs.json.JsError
 import play.api.libs.json.Json
 import play.api.libs.json.JsNumber
+import de.htwg.se.minesweeper.observer.Observable
+import de.htwg.se.minesweeper.model.GameState
+import play.api.libs.json.JsString
 
 case class XY(val x: Int, val y: Int)
 
@@ -97,4 +100,100 @@ object MinesweeperWebSocketActorFactory {
   ) = {
     Props(new MinesweeperWebSocketActor(out, controller, gameObserver))
   }
+}
+
+class MultiplayerWebsocketActor(
+    val out: ActorRef,
+    val username: String
+) extends Actor {
+
+  var receiveController: MinesweeperController = null
+
+  implicit val xyReads: Reads[XY] = (
+    (JsPath \ "x").read[Int] and
+      (JsPath \ "y").read[Int]
+  )(XY.apply)
+
+  override def receive = {
+    case msg: JsValue => {
+      (msg \ "type").get.as[String] match {
+        case "undo" => undo()
+        case "redo" => redo()
+        case "flag" =>
+          (msg \ "data").validate[XY] match {
+            case JsSuccess(xy, _) => flag(xy)
+            case e: JsError       => println(e)
+          }
+        case "reveal" =>
+          (msg \ "data").validate[XY] match {
+            case JsSuccess(xy, _) => reveal(xy)
+            case e: JsError       => println(e)
+          }
+      }
+    }
+  }
+
+  private def undo() = receiveController.undo()
+  private def redo() = receiveController.redo()
+
+  private def reveal(xy: XY) = receiveController.reveal(xy.x, xy.y)
+
+  private def flag(xy: XY) = receiveController.flag(xy.x, xy.y)
+
+  override def postStop() = {
+    println("websocket closed")
+  }
+
+  def update(ev: (String, Event, MinesweeperController)): Unit = {
+    val (user, e, controller) = ev
+    e match {
+      case SetupEvent() => println("setup" + user)
+      case WonEvent() | LostEvent() =>
+        out ! Json.obj("reload" -> JsBoolean(true))
+      case StartGameEvent(_) | FieldUpdatedEvent(_) =>
+        out ! gameStateJson(user, controller)
+      case _ => {}
+    }
+  }
+
+  private def gameStateJson(user: String, controller: MinesweeperController) =
+    gameStateWrites
+      .writes(controller.getGameState)
+      .as[JsObject] + ("timer" -> JsNumber(0)) + ("username" -> JsString(
+      user
+    ))
+}
+
+class Player(
+    val id: String,
+    val ws: MultiplayerWebsocketActor
+) extends Observable[(String, Event, MinesweeperController)]
+    with Observer[Event] {
+
+  var controller: MinesweeperController = null
+  def setController(controller: MinesweeperController) = {
+    this.controller = controller
+    ws.receiveController = controller
+    controller.addObserver(this)
+  }
+
+  override def update(e: Event): Unit = {
+    this.notifyObservers((id, e, this.controller))
+  }
+}
+
+class MultiplayerWebsocketDispatcher(
+    val players: Map[String, Player],
+    val startOpts: StartOpts
+) extends Observable[(String, GameState)]
+    with Observer[(String, Event, MinesweeperController)] {
+  for (_, player) <- players do player.addObserver(this)
+  for (_, player) <- players do
+    player.ws.out ! Json.obj("type" -> "setup", "numPlayers" -> players.size)
+  for (_, player) <- players do player.controller.startGame.tupled(startOpts)
+
+  override def update(e: (String, Event, MinesweeperController)): Unit =
+    for (_, player) <- players do {
+      player.ws.update(e)
+    }
 }

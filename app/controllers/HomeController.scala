@@ -25,6 +25,9 @@ import play.api.libs.json.Json
 import play.api.libs.json.JsBoolean
 import play.api.libs.streams.ActorFlow
 import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.actor.Props
+
+type StartOpts = (Int, Int, Float, Int)
 
 enum GameState:
   case NotStarted, Running, Won, Lost
@@ -117,5 +120,99 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
         gameObserver
       )
     }
+  }
+
+  var users = Set[String]()
+  var lobbies = Map[String, (StartOpts, List[Player])]()
+
+  def select_multiplayer(): Action[JsValue] = Action(parse.json) {
+    (request: Request[JsValue]) =>
+      {
+        val username = (request.body \ "username").as[String]
+        if users.contains(username) then {
+          Ok(Json.obj("error" -> "username already exists"))
+        } else {
+          val startOpts = (
+            (request.body \ "width").as[Int],
+            (request.body \ "height").as[Int],
+            (request.body \ "bomb_chance").as[Float],
+            (request.body \ "max_undos").as[Int]
+          )
+
+          users = users + username
+          lobbies = lobbies + (username -> (startOpts, List[Player]()))
+          Ok(Json.obj())
+        }
+      }
+  }
+
+  def multiplayer_websocket() =
+    WebSocket.accept[JsValue, JsValue] { request =>
+      val username = request.getQueryString("username") match {
+        case Some(username) => username
+        case None           => throw RuntimeException("no username given")
+      }
+      val lobby = request.getQueryString("lobby") match {
+        case Some(username) => username
+        case None           => throw RuntimeException("no username given")
+      }
+
+      if !users.contains(username) then
+        throw RuntimeException("invalid username")
+      if !(lobbies isDefinedAt lobby) then
+        throw RuntimeException("not a valid lobby")
+
+      ActorFlow.actorRef { out =>
+        println("recieved websocket connection")
+
+        for player <- lobbies(lobby)(1) do {
+          player.ws.out ! Json.obj(
+            "type" -> "status",
+            "message" -> (username + " joined the lobby")
+          )
+        }
+
+        val ws = MultiplayerWebsocketActor(
+          out,
+          username
+        )
+
+        lobbies = lobbies.updated(
+          lobby,
+          (
+            lobbies(lobby)(0),
+            (lobbies(lobby)(1)) ++ List[Player](Player(username, ws))
+          )
+        )
+
+        Props(ws)
+      }
+    }
+
+  def start_multiplayer(): Action[JsValue] = Action(parse.json) {
+    (request: Request[JsValue]) =>
+      {
+        val lobby = (request.body \ "lobby").as[String]
+        if !lobbies.contains(lobby) then {
+          Ok(Json.obj("error" -> "no lobby open"))
+        } else if lobbies(lobby)(1).length < 2 then {
+          Ok(Json.obj("error" -> "not enough players in lobby"))
+        } else {
+
+          var playerMap = Map[String, Player]()
+
+          for player <- lobbies(lobby)(1) do {
+            val controller =
+              MinesweeperController(RandomFieldFactory(Random()), FileIO())
+            controller.setup()
+            player.setController(controller)
+            playerMap = playerMap + (player.id -> player)
+          }
+
+          MultiplayerWebsocketDispatcher(playerMap, lobbies(lobby)(0))
+
+          Ok(Json.obj())
+        }
+      }
   }
 }
