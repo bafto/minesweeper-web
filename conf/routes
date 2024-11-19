@@ -11,9 +11,9 @@ GET		/api/retry					controllers.HomeController.retry()
 GET		/api/restart				controllers.HomeController.restart()
 POST 	/api/start_game 			controllers.HomeController.start_game()
 GET 	/api/ws 					controllers.HomeController.websocket()
-GET 	/api/multiplayer_ws			controllers.HomeController.multiplayer_websocket()
+GET 	/api/multiplayer_websocket	controllers.HomeController.multiplayer_websocket()
 POST 	/api/select_multiplayer 	controllers.HomeController.select_multiplayer()
-GET 	/api/start_multiplayer	 	controllers.HomeController.start_multiplayer()
+POST 	/api/start_multiplayer	 	controllers.HomeController.start_multiplayer()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

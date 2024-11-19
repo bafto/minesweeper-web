@@ -104,8 +104,11 @@ object MinesweeperWebSocketActorFactory {
 
 class MultiplayerWebsocketActor(
     val out: ActorRef,
-    val username: String
+    val username: String,
+    val player: Player
 ) extends Actor {
+
+  player.setWs(this)
 
   var receiveController: MinesweeperController = null
 
@@ -149,7 +152,7 @@ class MultiplayerWebsocketActor(
     e match {
       case SetupEvent() => println("setup" + user)
       case WonEvent() | LostEvent() =>
-        out ! Json.obj("reload" -> JsBoolean(true))
+        out ! Json.obj("type" -> "won/lost")
       case StartGameEvent(_) | FieldUpdatedEvent(_) =>
         out ! gameStateJson(user, controller)
       case _ => {}
@@ -161,14 +164,18 @@ class MultiplayerWebsocketActor(
       .writes(controller.getGameState)
       .as[JsObject] + ("timer" -> JsNumber(0)) + ("username" -> JsString(
       user
-    ))
+    )) + ("type" -> JsString("update"))
 }
 
 class Player(
-    val id: String,
-    val ws: MultiplayerWebsocketActor
+    val id: String
 ) extends Observable[(String, Event, MinesweeperController)]
     with Observer[Event] {
+
+  var ws: MultiplayerWebsocketActor = null
+  def setWs(ws: MultiplayerWebsocketActor) = {
+    this.ws = ws
+  }
 
   var controller: MinesweeperController = null
   def setController(controller: MinesweeperController) = {
