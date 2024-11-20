@@ -147,29 +147,33 @@ class MultiplayerWebsocketActor(
     println("websocket closed")
   }
 
-  def update(ev: (String, Event, MinesweeperController)): Unit = {
-    val (user, e, controller) = ev
+  def update(ev: (String, Event, MinesweeperController, Long)): Unit = {
+    val (user, e, controller, time) = ev
     e match {
       case SetupEvent() => println("setup" + user)
       case WonEvent() | LostEvent() =>
         out ! Json.obj("type" -> "won/lost")
       case StartGameEvent(_) | FieldUpdatedEvent(_) =>
-        out ! gameStateJson(user, controller)
+        out ! gameStateJson(user, controller, time)
       case _ => {}
     }
   }
 
-  private def gameStateJson(user: String, controller: MinesweeperController) =
+  private def gameStateJson(
+      user: String,
+      controller: MinesweeperController,
+      time: Long
+  ) =
     gameStateWrites
       .writes(controller.getGameState)
-      .as[JsObject] + ("timer" -> JsNumber(0)) + ("username" -> JsString(
+      .as[JsObject] + ("timer" -> JsNumber(time)) + ("username" -> JsString(
       user
     )) + ("type" -> JsString("update"))
 }
 
 class Player(
     val id: String
-) extends Observable[(String, Event, MinesweeperController)]
+) extends Observable[(String, Event, MinesweeperController, Long)]
     with Observer[Event] {
 
   var ws: MultiplayerWebsocketActor = null
@@ -184,8 +188,15 @@ class Player(
     controller.addObserver(this)
   }
 
+  private var start_time = current_time_seconds
+  private def current_time_seconds = System.currentTimeMillis() / 1000;
+  def getTime = current_time_seconds - start_time
+
   override def update(e: Event): Unit = {
-    this.notifyObservers((id, e, this.controller))
+    e match {
+      case StartGameEvent(_) => start_time = current_time_seconds
+    }
+    this.notifyObservers((id, e, this.controller, getTime))
   }
 }
 
@@ -193,13 +204,13 @@ class MultiplayerWebsocketDispatcher(
     val players: Map[String, Player],
     val startOpts: StartOpts
 ) extends Observable[(String, GameState)]
-    with Observer[(String, Event, MinesweeperController)] {
+    with Observer[(String, Event, MinesweeperController, Long)] {
   for (_, player) <- players do player.addObserver(this)
   for (_, player) <- players do
     player.ws.out ! Json.obj("type" -> "setup", "numPlayers" -> players.size)
   for (_, player) <- players do player.controller.startGame.tupled(startOpts)
 
-  override def update(e: (String, Event, MinesweeperController)): Unit =
+  override def update(e: (String, Event, MinesweeperController, Long)): Unit =
     for (_, player) <- players do {
       player.ws.update(e)
     }
