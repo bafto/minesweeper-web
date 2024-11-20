@@ -129,10 +129,7 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
     (request: Request[JsValue]) =>
       {
         val username = (request.body \ "username").as[String]
-        println("select_multiplayer")
-        println(username)
         if users.contains(username) then {
-          println("username already exists")
           Ok(Json.obj("error" -> "username already exists"))
         } else {
           val startOpts = (
@@ -151,7 +148,6 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
 
   def multiplayer_websocket() =
     WebSocket.accept[JsValue, JsValue] { request =>
-      println("multiplayer_websocket")
       val username = request.getQueryString("username") match {
         case Some(username) => username
         case None           => throw RuntimeException("no username given")
@@ -166,7 +162,6 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
         throw RuntimeException("not a valid lobby")
 
       ActorFlow.actorRef { out =>
-        println("recieved websocket connection")
 
         for player <- lobbies(lobby)(1) do {
           player.ws.out ! Json.obj(
