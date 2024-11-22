@@ -1,12 +1,26 @@
-async function startGame() {
+function getValidatedInput() {
 	const width = document.getElementById('input-width');
 	const height = document.getElementById('input-height');
 	const bomb_chance = document.getElementById('input-bomb_chance');
 	const max_undos = document.getElementById('input-max_undos');
 
 	if (validate(width) | validate(height) | validate(max_undos)) {
+		return false;
+	}
+	return {
+		width: width,
+		height: height,
+		bomb_chance: bomb_chance,
+		max_undos: max_undos,
+	}
+}
+
+async function startGame() {
+	const validated = getValidatedInput();
+	if (validated === false) {
 		return;
 	}
+	const { width, height, bomb_chance, max_undos } = validated;
 
 	fetch('/api/start_game', {
 		method: 'POST',
