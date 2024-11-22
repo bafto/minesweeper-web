@@ -1,14 +1,5 @@
 @main("Minesweeper") {
 	<link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/game.css")'>
-	<style>
-		:root {
-			--grid-width: 0;
-			--grid-height: 0;
-		}
-	</style>
-	<script>
-		const imageBasePath = '@routes.Assets.versioned("images/")';
-	</script>
     <script defer src='@routes.Assets.versioned("javascripts/game.js")' type="text/javascript"></script>
 	<div id="game">
 		<div id="stat-container">
@@ -16,22 +7,23 @@
 			<h2>Undos: {{ undos }}</h2>
 		</div>
 		
-		<div>
+		<div id="grids-container">
 			<div v-if="end" id="end-overlay">
 				<h1>You {{end}}!</h1>
 				<button @@click="retry()">Retry</button>
 			</div>
-			<div id="grid-container">
-				<img v-for="cell in cells" :src="getCellImgClass(cell.cell).img" class="cell"
-				:class="getCellImgClass(cell.cell).class" alt="cell" 
-				width="32px" height="32px" :cell-x="cell.x" :cell-y="cell.y"
-				@@click="reveal($event)" @@contextmenu.prevent="flag($event)">
+			<div class="game-grid">
+				<div v-for="cell in cells" class="cell"
+					:class="getCellImgClass(cell.cell).class" alt="cell" 
+					width="32px" height="32px" :cell-x="cell.x" :cell-y="cell.y"
+					@@click="reveal($event)" @@contextmenu.prevent="flag($event)">
+				</div>
 			</div>
 		</div>
 		
 		<div id="button-container">
 			<button @@click="main_menu()">Main Menu</button>
-			<button :disabled="end" @@click="undo()">Undo</button>
+			<button :disabled="end || undos === 0" @@click="undo()">Undo</button>
 			<button :disabled="end" @@click="redo()">Redo</button>
 		</div>
 	</div>

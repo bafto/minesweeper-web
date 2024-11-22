@@ -65,28 +65,23 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (cell.isRevealed) {
 					if (cell.isBomb) {
 						return {
-							img: imageBasePath + "bomb.png",
 							class: "bomb",
 						};
 					} else if (cell.nearbyBombs === 0) {
 						return {
-							img: imageBasePath + "revealed.png",
 							class: "revealed"
 						};
 					} else {
 						return {
-							img: imageBasePath + cell.nearbyBombs + ".png",
 							class: `revealed-${cell.nearbyBombs}`
 						};
 					}
 				} else if (cell.isFlagged) {
 					return {
-						img: imageBasePath + "flagged.png",
 						class: "flagged"
 					};
 				} else {
 					return {
-						img: imageBasePath + "unrevealed.png",
 						class: "unrevealed"
 					};
 				}
@@ -105,7 +100,7 @@ function createTimer(startTime, self) {
 }
 
 async function updateGame(state, self) {
-	if (document.querySelectorAll('#grid-container img').length === 0) {
+	if (document.querySelectorAll('.game-grid div').length === 0) {
 		createGrid(state, self);
 		return;
 	}
@@ -143,7 +138,6 @@ function getCellXY(cell) {
 
 function handleWsMessage(msg, self) {
 	const state = JSON.parse(msg.data);
-	console.log(state)
 
 	if (state.reload) {
 		reload_page();
