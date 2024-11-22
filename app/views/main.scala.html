@@ -11,21 +11,21 @@
     <head>
         <title>@title</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
-        <script defer src="@routes.Assets.versioned("javascripts/main.js")" type="text/javascript"></script>
+        <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
+        <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.png")'>
+        <script defer src='@routes.Assets.versioned("javascripts/main.js")' type="text/javascript"></script>
         <script src="https://unpkg.com/vue@@3/dist/vue.global.js"></script>
     </head>
 
     <body>
         <header>
             <div id="header-title">
-                <a href="/"><img id="logo" src="@routes.Assets.versioned("images/favicon.png")" alt="minesweeper logo" width="32px" height="32px" title="go back"></a>
+                <a href="/"><img id="logo" src='@routes.Assets.versioned("images/favicon.png")' alt="minesweeper logo" width="32px" height="32px" title="go back"></a>
                 <h1>Minesweeper</h1>
             </div>
             <div>
                 <a href="https://github.com/bafto/minesweeper-web" target="_blank">
-                    <img invert src="@routes.Assets.versioned("images/github.svg")" alt="github logo" width="32px" height="32px" title="Github">
+                    <img invert src='@routes.Assets.versioned("images/github.svg")' alt="github logo" width="32px" height="32px" title="Github">
                 </a>
             </div>
         </header>

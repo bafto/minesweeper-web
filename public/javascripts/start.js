@@ -1,52 +1,35 @@
-function getValidatedInput() {
-	const width = document.getElementById('input-width');
-	const height = document.getElementById('input-height');
-	const bomb_chance = document.getElementById('input-bomb_chance');
-	const max_undos = document.getElementById('input-max_undos');
+document.addEventListener('DOMContentLoaded', () => {
+	const { createApp, ref } = Vue
 
-	if (validate(width) | validate(height) | validate(max_undos)) {
-		return false;
-	}
-	return {
-		width: width,
-		height: height,
-		bomb_chance: bomb_chance,
-		max_undos: max_undos,
-	}
-}
-
-async function startGame() {
-	const validated = getValidatedInput();
-	if (validated === false) {
-		return;
-	}
-	const { width, height, bomb_chance, max_undos } = validated;
-
-	fetch('/api/start_game', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			'Csrf-Token': getCookieByName('play-csrf-token'),
+	createApp({
+		data() {
+			return {
+				width: 10,
+				height: 10,
+				bomb_chance: 0.5,
+				max_undos: 3
+			}
 		},
-		body: JSON.stringify({
-			width: Number.parseInt(width.value),
-			height: Number.parseInt(height.value),
-			bomb_chance: Number.parseFloat(bomb_chance.value),
-			max_undos: Number.parseInt(max_undos.value)
-		})
-	}).then(reload_page).catch(console.error);
-}
-
-function validate(elm) {
-	if (elm.value !== "") {
-		elm.classList.remove("invalid");
-		return false;
-	}
-
-	elm.classList.add("invalid");
-
-	return true;
-}
+		methods: {
+			startGame() {
+				fetch('/api/start_game', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'Csrf-Token': getCookieByName('play-csrf-token'),
+					},
+					body: JSON.stringify({
+						username: "",
+						width: this.width,
+						height: this.height,
+						bomb_chance: this.bomb_chance,
+						max_undos: this.max_undos
+					})
+				}).then(reload_page).catch(console.error);
+			}
+		}
+	}).mount('#settings')
+})
 
 function getCookieByName(name) {
 	const cookies = document.cookie.split(";");

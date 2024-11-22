@@ -35,11 +35,12 @@
     text-wrap: nowrap;
 }
 
-.invalid {
-	border-color: var(--red) !important;
+[invalid=true] {
+	border-color: red !important;
+	background-color: rgb(161, 77, 77) !important;
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 500px) {
     #settings-inputs {
         grid-template-columns: none;
         grid-template-rows: var(--inputs-grid);
