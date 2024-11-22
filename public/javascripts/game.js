@@ -20,11 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
 				cells: [],
 				elapsed: 0,
 				undos: 0,
+				end: undefined
 			}
 		},
 		methods: {
 			main_menu() {
 				fetch('/api/restart').then(reload_page);
+			},
+			retry() {
+				fetch('/api/retry').then(reload_page);
 			},
 			undo() {
 				gameSocket.send(JSON.stringify({
@@ -94,12 +98,13 @@ document.addEventListener('DOMContentLoaded', () => {
 function createTimer(startTime, self) {
 	self.elapsed = startTime;
 	return setInterval(() => {
-		self.elapsed = self.elapsed + 1;
+		if (!self.end) {
+			self.elapsed = self.elapsed + 1;
+		}
 	}, 1000);
 }
 
 async function updateGame(state, self) {
-	const grid = document.getElementById('grid-container');
 	if (document.querySelectorAll('#grid-container img').length === 0) {
 		createGrid(state, self);
 		return;
@@ -116,8 +121,6 @@ async function updateGame(state, self) {
 }
 
 function createGrid(state, self) {
-	const grid = document.getElementById('grid-container');
-
 	// update the cells
 	self.cells = state.cells;
 
@@ -140,11 +143,21 @@ function getCellXY(cell) {
 
 function handleWsMessage(msg, self) {
 	const state = JSON.parse(msg.data);
+	console.log(state)
 
 	if (state.reload) {
 		reload_page();
 		return;
 	}
 
+	if (state.end) {
+		self.end = state.end;
+		return;
+	}
+
 	updateGame(state, self);
+}
+
+function reload_page() {
+	window.location.reload();
 }

@@ -15,16 +15,24 @@
 			<h2>Time: {{elapsed}}s</h2>
 			<h2>Undos: {{ undos }}</h2>
 		</div>
-		<div id="grid-container">
-			<img v-for="cell in cells" :src="getCellImgClass(cell.cell).img" class="cell"
-			:class="getCellImgClass(cell.cell).class" alt="cell" 
-			width="32px" height="32px" :cell-x="cell.x" :cell-y="cell.y"
-			v-on:click="reveal($event)" @@contextmenu.prevent="flag($event)">
+		
+		<div>
+			<div v-if="end" id="end-overlay">
+				<h1>You {{end}}!</h1>
+				<button v-on:click="retry()">Retry</button>
+			</div>
+			<div id="grid-container">
+				<img v-for="cell in cells" :src="getCellImgClass(cell.cell).img" class="cell"
+				:class="getCellImgClass(cell.cell).class" alt="cell" 
+				width="32px" height="32px" :cell-x="cell.x" :cell-y="cell.y"
+				v-on:click="reveal($event)" @@contextmenu.prevent="flag($event)">
+			</div>
 		</div>
+		
 		<div id="button-container">
 			<button v-on:click="main_menu()">Main Menu</button>
-			<button v-on:click="undo()">Undo</button>
-			<button v-on:click="redo()">Redo</button>
+			<button :disabled="end" v-on:click="undo()">Undo</button>
+			<button :disabled="end" v-on:click="redo()">Redo</button>
 		</div>
 	</div>
 }

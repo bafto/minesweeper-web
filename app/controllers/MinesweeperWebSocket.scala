@@ -79,8 +79,12 @@ class MinesweeperWebSocketActor(
 
   override def update(e: Event): Unit = {
     e match {
-      case WonEvent() | LostEvent() | SetupEvent() =>
+      case SetupEvent() =>
         out ! Json.obj("reload" -> JsBoolean(true))
+      case WonEvent() =>
+        out ! Json.obj("end" -> "won")
+      case LostEvent() =>
+        out ! Json.obj("end" -> "lost")
       case StartGameEvent(_) | FieldUpdatedEvent(_) =>
         out ! gameStateJson
       case _ => {}

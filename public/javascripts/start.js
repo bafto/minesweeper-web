@@ -19,13 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
 						'Csrf-Token': getCookieByName('play-csrf-token'),
 					},
 					body: JSON.stringify({
-						username: "",
 						width: this.width,
 						height: this.height,
 						bomb_chance: this.bomb_chance,
 						max_undos: this.max_undos
 					})
-				}).then(reload_page).catch(console.error);
+				}).then(window.location.reload).catch(console.error);
 			}
 		}
 	}).mount('#settings')

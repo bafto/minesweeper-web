@@ -70,10 +70,8 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
 
   def minesweeper() = Action {
     gameObserver.getState match {
-      case GameState.Won        => Ok(views.html.won(gameObserver.getTime))
-      case GameState.Lost       => Ok(views.html.lost(gameObserver.getTime))
       case GameState.NotStarted => Ok(views.html.start())
-      case GameState.Running    => Ok(views.html.game())
+      case GameState.Won | GameState.Lost | GameState.Running => Ok(views.html.game())
     }
   }
 
