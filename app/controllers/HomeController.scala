@@ -123,6 +123,16 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
   var users = Set[String]()
   var lobbies = Map[String, (StartOpts, List[Player])]()
 
+  def getLobbies(): Action[AnyContent] = Action {
+    val lobbiesJson = lobbies.map { case (lobbyName, (_, players)) =>
+      Json.obj(
+        "name" -> lobbyName,
+        "players" -> players.map(_.id) // Extract the player IDs
+      )
+    }
+    Ok(Json.toJson(lobbiesJson))
+  }
+
   def select_multiplayer(): Action[JsValue] = Action(parse.json) {
     (request: Request[JsValue]) =>
       {

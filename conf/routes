@@ -9,6 +9,7 @@ GET     /about                      controllers.HomeController.about()
 
 GET		/api/retry					controllers.HomeController.retry()
 GET		/api/restart				controllers.HomeController.restart()
+GET		/api/lobbies				controllers.HomeController.getLobbies()
 POST 	/api/start_game 			controllers.HomeController.start_game()
 GET 	/api/ws 					controllers.HomeController.websocket()
 GET 	/api/multiplayer_websocket	controllers.HomeController.multiplayer_websocket()
