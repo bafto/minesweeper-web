@@ -1,5 +1,6 @@
 :root {
-    --cell-size: 32px;
+    --player-count: 1;
+    --cell-size: clamp(16px, round(calc(5vw / var(--player-count)), 1px), 32px);
     --game-width: calc(var(--grid-width) * var(--cell-size));
 }
 
@@ -43,9 +44,9 @@
     width: var(--game-width);
     grid-template-columns: repeat(var(--grid-width), var(--cell-size));
     grid-template-rows: repeat(var(--grid-height), var(--cell-size));
-    padding: 1rem;
+    padding: calc(var(--cell-size) / 2);
     background-color: var(--dark-color);
-    border-radius: 1rem;
+    border-radius: calc(var(--cell-size) / 2);
 }
 
 .cell {
