@@ -27,10 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
 					body: JSON.stringify({
 						width: this.width,
 						height: this.height,
-						bomb_chance: this.bomb_chance,
+						bomb_chance: parseFloat(this.bomb_chance),
 						max_undos: this.max_undos
 					})
-				}).then(window.location.reload).catch(console.error);
+				}).then(window.location.reload.bind(window.location)).catch(console.error);
 			},
 			async selectMultiplayer() {
 				fetch('/api/select_multiplayer', {
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				socket.onclose = () => console.log("ws close");
 				socket.onerror = () => console.error("ws error");
 				socket.onmessage = handleWsMessage;
-			
+
 				return socket;
 			},
 			async updateLobbies() {
