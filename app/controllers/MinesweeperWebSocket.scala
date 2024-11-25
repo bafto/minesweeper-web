@@ -148,6 +148,7 @@ class MultiplayerWebsocketActor(
   private def flag(xy: XY) = receiveController.flag(xy.x, xy.y)
 
   override def postStop() = {
+    player.websocketDisconnected()
     println("websocket closed")
   }
 
@@ -183,6 +184,9 @@ class Player(
   var ws: MultiplayerWebsocketActor = null
   def setWs(ws: MultiplayerWebsocketActor) = {
     this.ws = ws
+  }
+  def websocketDisconnected() = {
+    controller.removeObserver(this)
   }
 
   var controller: MinesweeperController = null

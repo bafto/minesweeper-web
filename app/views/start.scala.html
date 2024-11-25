@@ -32,7 +32,8 @@
 
 		<div id="settings-buttons">
 			<button v-if="state === 'settings1'" @@click="startGame()" :disabled="!width || !height || max_undos===''">Start Singleplayer</button>
-			<button v-if="state === 'settings2'" @@click="selectMultiplayer()" :disabled="!width || !height || max_undos==='' || !username">Start Multiplayer Game</button>
+			<button v-if="state === 'settings2'" @@click="selectMultiplayer()" :disabled=createLobbyDisabled >Create Lobby</button>
+			<button v-if="state === 'settings2'" @@click="startMultiplayer()" :disabled=startMultiplayerDisabled >Start Game</button>
 		</div>
 	</form>
 	<div id="lobby-list" v-if="state === 'list-lobbies'">

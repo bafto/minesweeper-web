@@ -10,8 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
 				width: 10,
 				height: 10,
 				bomb_chance: 0.5,
-				max_undos: 3
+				max_undos: 3,
+				socket: null
 			};
+		},
+		computed: {
+			createLobbyDisabled() {
+				console.log(this.socket);
+				return !this.width || !this.height || this.max_undos === '' || !this.username || this.socket !== null;
+			},
+			startMultiplayerDisabled() {
+				return this.socket === null;
+			}
 		},
 		mounted() {
 			this.updateLobbies()
@@ -43,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						username: this.username,
 						width: this.width,
 						height: this.height,
-						bomb_chance: this.bomb_chance,
+						bomb_chance: parseFloat(this.bomb_chance),
 						max_undos: this.max_undos
 					})
 				}).then(async (resp) => {
@@ -51,11 +61,15 @@ document.addEventListener('DOMContentLoaded', () => {
 					if (json.error) {
 						console.error(json.error);
 					} else {
-						start_multiplayer_ws(this.username);
+						this.socket = start_multiplayer_ws(this.username);
 					}
 				}).catch(console.error);
 			},
 			joinLobby(lobby) {
+				if (this.socket) {
+					return;
+				}
+
 				const socket = new WebSocket(`ws://localhost:9000/api/multiplayer_websocket?username=${this.username}&lobby=${lobby}`)
 				socket.onopen = () => {
 					console.log("ws open");
@@ -64,7 +78,19 @@ document.addEventListener('DOMContentLoaded', () => {
 				socket.onerror = () => console.error("ws error");
 				socket.onmessage = handleWsMessage;
 
-				return socket;
+				this.socket = socket;
+			},
+			startMultiplayer() {
+				fetch("/api/start_multiplayer", {
+					method: "POST",
+					body: JSON.stringify({
+						lobby: this.username,
+					}),
+					headers: {
+						'Content-Type': 'application/json',
+						'Csrf-Token': getCookieByName('play-csrf-token'),
+					},
+				}).then(() => console.log("started")).catch(console.error);
 			},
 			async updateLobbies() {
 				this.lobbies = await fetch('/api/lobbies')

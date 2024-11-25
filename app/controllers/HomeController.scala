@@ -71,7 +71,8 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
   def minesweeper() = Action {
     gameObserver.getState match {
       case GameState.NotStarted => Ok(views.html.start())
-      case GameState.Won | GameState.Lost | GameState.Running => Ok(views.html.game())
+      case GameState.Won | GameState.Lost | GameState.Running =>
+        Ok(views.html.game())
     }
   }
 
@@ -219,6 +220,8 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
           }
 
           MultiplayerWebsocketDispatcher(playerMap, lobbies(lobby)(0))
+
+          lobbies = lobbies - lobby
 
           Ok(Json.obj())
         }
