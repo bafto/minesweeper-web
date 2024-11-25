@@ -179,7 +179,22 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
           )
         }
 
-        val player = Player(username)
+        val player = Player(
+          username,
+          (p: Player) => {
+            users = users - username
+            lobbies = lobbies.updated(
+              lobby,
+              (
+                lobbies(lobby)(0),
+                (lobbies(lobby)(1).filterNot(_ == p))
+              )
+            )
+            if lobbies(lobby)(1).length == 0 then {
+              lobbies = lobbies - lobby
+            }
+          }
+        )
 
         lobbies = lobbies.updated(
           lobby,
@@ -220,8 +235,6 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
           }
 
           MultiplayerWebsocketDispatcher(playerMap, lobbies(lobby)(0))
-
-          lobbies = lobbies - lobby
 
           Ok(Json.obj())
         }

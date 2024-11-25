@@ -177,7 +177,8 @@ class MultiplayerWebsocketActor(
 }
 
 class Player(
-    val id: String
+    val id: String,
+    val dcCallback: (Player) => Unit
 ) extends Observable[(String, Event, MinesweeperController, Long)]
     with Observer[Event] {
 
@@ -186,7 +187,10 @@ class Player(
     this.ws = ws
   }
   def websocketDisconnected() = {
-    controller.removeObserver(this)
+    if controller != null then {
+      controller.removeObserver(this)
+    }
+    dcCallback(this)
   }
 
   var controller: MinesweeperController = null
