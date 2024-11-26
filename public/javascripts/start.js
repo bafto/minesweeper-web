@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				fetch("/api/start_multiplayer", {
 					method: "POST",
 					body: JSON.stringify({
-						lobby: this.username,
+						lobby: username,
 					}),
 					headers: {
 						'Content-Type': 'application/json',
