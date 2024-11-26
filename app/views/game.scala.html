@@ -12,13 +12,7 @@
 				<h1>You {{end}}!</h1>
 				<button @@click="retry()">Retry</button>
 			</div>
-			<div class="game-grid">
-				<div v-for="cell in cells" class="cell"
-					:class="getCellImgClass(cell.cell).class" alt="cell" 
-					width="32px" height="32px" :cell-x="cell.x" :cell-y="cell.y"
-					@@click="reveal($event)" @@contextmenu.prevent="flag($event)">
-				</div>
-			</div>
+			<game-grid ref="game_grid"></game-grid>
 		</div>
 		
 		<div id="button-container">
