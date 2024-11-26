@@ -97,8 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	app.mount('#game')
 })
 
-async function updateGame(state, self) {
-	if (self.$refs.game_grid.cells.length === 0) {
+async function updateGame(state, self, gameID) {
+	if (self.$refs[gameID].cells.length === 0) {
 		const root = document.querySelector(':root');
 		root.style.setProperty('--grid-width', state.width);
 		root.style.setProperty('--grid-height', state.height);
@@ -112,7 +112,7 @@ async function updateGame(state, self) {
 	}
 
 	// update the cells
-	self.$refs.game_grid.cells = state.cells
+	self.$refs[gameID].cells = state.cells
 
 	// sync the timer with the server timer
 	self.elapsed = state.timer;
@@ -141,7 +141,7 @@ function handleWsMessage(msg, self) {
 		return;
 	}
 
-	updateGame(state, self);
+	updateGame(state, self, 'game_grid');
 }
 
 function reload_page() {
