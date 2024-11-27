@@ -7,7 +7,7 @@
 			<button @click="updateLobbies">Refresh List</button>
 		</div>
 		<div id="cards">
-			<LobbyCard v-for="lobby in lobbies" :key="lobby.username" :lobby="lobby" />
+			<LobbyCard v-for="lobby in lobbies" :key="lobby.username" :lobby="lobby" :username="username" />
 			<p v-if="lobbies.length === 0">No lobbies found</p>
 		</div>
 	</div>
@@ -23,6 +23,7 @@ export default {
 	},
 	data() {
 		return {
+			username: '',
 			lobbies: [],
 		}
 	},

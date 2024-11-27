@@ -14,6 +14,10 @@ export default {
             type: Object,
             required: true,
         },
+		username: {
+			type: String,
+			required: true
+		}
 	},
 	methods: {
 		joinLobby() {
@@ -21,7 +25,7 @@ export default {
 				return;
 			}
 
-			const socket = new WebSocket(`ws://localhost:9000/api/multiplayer_websocket?username=${this.username}&lobby=${this.lobby.name}`)
+			const socket = new WebSocket(`ws://localhost:9000/api/ws/multiplayer?username=${this.username}&lobby=${this.lobby.name}`)
 			socket.onopen = () => {
 				console.log("ws open");
 			};

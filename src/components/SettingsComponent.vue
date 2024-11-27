@@ -115,7 +115,7 @@ function getCookieByName(name) {
 }
 
 function start_multiplayer_ws(username) {
-	const socket = new WebSocket(`ws://localhost:9000/api/multiplayer_websocket?username=${username}&lobby=${username}`)
+	const socket = new WebSocket(`ws://localhost:9000/api/ws/multiplayer?username=${username}&lobby=${username}`)
 	socket.onopen = () => {
 		console.log("ws open");
 	};
