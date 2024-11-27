@@ -2,14 +2,14 @@
 	<form id="settings" @submit.prevent="">
 		<h2>Board Settings</h2>
 		<div id="settings-inputs">
-			<label>Username:</label>
-			<input v-model="username" type="text" :invalid="!username" required />
+			<label v-if="multiplayer === 'true'">Username:</label>
+			<input v-if="multiplayer === 'true'" v-model="username" type="text" required />
 
 			<label>Board Width:</label>
-			<input v-model="width" type="number" :invalid="!width" required min="1" max="32" />
+			<input v-model="width" type="number" required min="1" max="32" />
 
 			<label>Board Height:</label>
-			<input v-model="height" type="number" :invalid="!height" required min="1" max="32" />
+			<input v-model="height" type="number" required min="1" max="32" />
 
 			<label>Bomb Chance:</label>
 			<div id="range-wrapper">
@@ -22,9 +22,9 @@
 		</div>
 
 		<div id="settings-buttons">
-			<button v-if="multiplayer === 'false'" @click="startGame()" :disabled="!width || !height || max_undos===''">Start Singleplayer</button>
-			<button v-if="multiplayer === 'true'" :disabled=createLobbyDisabled >Create Lobby</button>
-			<button v-if="multiplayer === 'true'" :disabled=startMultiplayerDisabled >Start Game</button>
+			<button v-if="multiplayer === 'false'" @click="startGame()" :disabled="disableButtons">Start Singleplayer</button>
+			<button v-if="multiplayer === 'true'" @click=selectMultiplayer() :disabled="disableButtons">Create Lobby</button>
+			<button v-if="multiplayer === 'true'" @click=startMultiplayer() :disabled="disableButtons">Start Game</button>
 		</div>
 	</form>
 </template>
@@ -37,11 +37,115 @@ export default {
 	},
 	data() {
 		return {
-			username: "",
+			username: "dummy",
 			width: 10,
 			height: 10,
 			bomb_chance: 0.5,
 			max_undos: 3,
+		}
+	},
+	computed: {
+		disableButtons() {
+			return !(this.width && this.height && this.max_undos && this.username.trim())
+		},
+	},
+	methods: {
+		startGame() {
+			fetch('/api/start_game', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Csrf-Token': getCookieByName('play-csrf-token'),
+				},
+				body: JSON.stringify({
+					width: this.width,
+					height: this.height,
+					bomb_chance: parseFloat(this.bomb_chance),
+					max_undos: this.max_undos
+				})
+			}).then(window.location.reload.bind(window.location)).catch(console.error);
+		},
+		async selectMultiplayer() {
+			fetch('/api/select_multiplayer', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Csrf-Token': getCookieByName('play-csrf-token'),
+				},
+				body: JSON.stringify({
+					username: this.username,
+					width: this.width,
+					height: this.height,
+					bomb_chance: parseFloat(this.bomb_chance),
+					max_undos: this.max_undos
+				})
+			}).then(async (resp) => {
+				const json = await resp.json();
+				if (json.error) {
+					console.error(json.error);
+				} else {
+					this.socket = start_multiplayer_ws(this.username);
+				}
+			}).catch(console.error);
+		},
+		startMultiplayer() {
+			fetch("/api/start_multiplayer", {
+				method: "POST",
+				body: JSON.stringify({
+					lobby: this.username,
+				}),
+				headers: {
+					'Content-Type': 'application/json',
+					'Csrf-Token': getCookieByName('play-csrf-token'),
+				},
+			}).then(() => console.log("started")).catch(console.error);
+		}
+	}
+}
+
+function getCookieByName(name) {
+	const cookies = document.cookie.split(";");
+	for (let cookie of cookies) {
+		cookie = cookie.trim();
+		if (cookie.startsWith(name + "=")) {
+			return cookie.substring(name.length + 1);
+		}
+	}
+	return null;
+}
+
+function start_multiplayer_ws(username) {
+	const socket = new WebSocket(`ws://localhost:9000/api/multiplayer_websocket?username=${username}&lobby=${username}`)
+	socket.onopen = () => {
+		console.log("ws open");
+	};
+	socket.onclose = () => console.log("ws close");
+	socket.onerror = () => console.error("ws error");
+	socket.onmessage = handleWsMessage;
+
+	return socket;
+}
+
+function handleWsMessage(m) {
+	const msg = JSON.parse(m.data);
+
+	switch (msg.type) {
+		case "status": {
+			console.log(msg.message);
+			break;
+		}
+		case "won/lost": {
+			console.log("won/lost");
+			break;
+		}
+		case "update": {
+			console.log("update");
+			console.log(msg)
+			break;
+		}
+		case "setup": {
+			console.log("setup", msg.numPlayers);
+			break;
 		}
 	}
 }
@@ -86,7 +190,7 @@ export default {
     text-wrap: nowrap;
 }
 
-[invalid=true] {
+input:user-invalid {
     border-color: red !important;
     background-color: rgb(161, 77, 77) !important;
 }

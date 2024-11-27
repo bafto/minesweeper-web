@@ -2,13 +2,13 @@
 	<header>
 		<div id="header-title">
 			<router-link to="/">
-				<img id="logo" src='../public/images/favicon.png' alt="minesweeper logo" width="32px" height="32px" title="go back">
+				<img id="logo" src='images/logo.png' alt="minesweeper logo" width="32px" height="32px" title="go back">
 			</router-link>
 			<h1>Minesweeper</h1>
 		</div>
 		<div>
 			<a href="https://github.com/bafto/minesweeper-web" target="_blank">
-				<img invert src='../public/images/github.svg' alt="github logo" width="32px" height="32px" title="Github">
+				<img invert src='images/github.svg' alt="github logo" width="32px" height="32px" title="Github">
 			</a>
 		</div>
 	</header>
@@ -59,18 +59,19 @@ img[invert] {
     filter: invert();
 }
 
-html {
+html, body {
     height: 100%;
+	margin: 0;
+    padding: 0;
 }
 
-body {
+#app {
     height: 100%;
-    margin: 0;
-    padding: 0;
     color: var(--text-color);
     background-color: var(--medium-color);
     display: flex;
     flex-direction: column;
+	justify-content: space-between;
 }
 
 header {

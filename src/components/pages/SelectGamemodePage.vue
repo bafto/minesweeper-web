@@ -1,12 +1,10 @@
 <template>
-  <div id="start-body">
 	<div id="mode-select">
 		<h1>Select a game mode</h1>
 		<router-link to="/start-singleplayer" class="btn">Play Singleplayer</router-link>
 		<router-link to="/create-lobby" class="btn">Create Multiplayer Lobby</router-link>
 		<router-link to="/join-lobby" class="btn">Join Multiplayer Lobby</router-link>
 	</div>
-  </div>
 </template>
 
 <script>
@@ -16,10 +14,6 @@ export default {
 </script>
 
 <style scoped>
-#start-body {
-    height: 100%;
-}
-
 #mode-select {
     display: flex;
     flex-direction: column;

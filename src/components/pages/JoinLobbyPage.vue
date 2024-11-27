@@ -7,19 +7,20 @@
 			<button @click="updateLobbies">Refresh List</button>
 		</div>
 		<div id="cards">
-			<div v-for="lobby in lobbies" :key="lobby.username" class="lobby-card">
-				<span>{{lobby.name}}'s Lobby</span>
-				<span>{{lobby.players.length}} Players</span>
-				<button @click="joinLobby(lobby.name)" :disabled="!username">Join</button>
-			</div>
+			<LobbyCard v-for="lobby in lobbies" :key="lobby.username" :lobby="lobby" />
 			<p v-if="lobbies.length === 0">No lobbies found</p>
 		</div>
 	</div>
 </template>
 
 <script>
+import LobbyCard from '../LobbyCard.vue';
+
 export default {
 	name: 'JoinLobbyPage',
+	components: {
+		LobbyCard
+	},
 	data() {
 		return {
 			lobbies: [],
@@ -29,21 +30,6 @@ export default {
 		this.updateLobbies()
 	},
 	methods: {
-		joinLobby(lobby) {
-			if (this.socket) {
-				return;
-			}
-
-			const socket = new WebSocket(`ws://localhost:9000/api/multiplayer_websocket?username=${this.username}&lobby=${lobby}`)
-			socket.onopen = () => {
-				console.log("ws open");
-			};
-			socket.onclose = () => console.log("ws close");
-			socket.onerror = () => console.error("ws error");
-			socket.onmessage = handleWsMessage;
-
-			this.socket = socket;
-		},
 		async updateLobbies() {
 			this.lobbies = await fetch('/api/lobbies')
 				.then(r => r.json())
@@ -52,14 +38,6 @@ export default {
 	}
 }
 
-function handleWsMessage(msg) {
-	const state = JSON.parse(msg.data);
-
-	if (state.reload) {
-		window.location.reload();
-		return;
-	}
-}
 </script>
 
 <style scoped>
@@ -88,29 +66,5 @@ function handleWsMessage(msg) {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-}
-
-#cards .lobby-card {
-    display: grid;
-    width: 90%;
-    height: 2rem;
-    padding: .5rem;
-    grid-template-columns: 3fr 1fr 1fr;
-    align-items: center;
-    background-color: var(--dark-color);
-    border-radius: 1rem;
-    border: var(--medium-color) inset 1px;
-}
-
-#cards .lobby-card span {
-    align-content: center;
-    padding: .5rem;
-    border-right: 1px var(--highlight-color) solid;
-}
-
-#cards .lobby-card button {
-    height: 2rem;
-    width: 5rem;
-    margin: auto;
 }
 </style>
