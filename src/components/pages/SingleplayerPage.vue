@@ -10,13 +10,7 @@
 				<h1>You {{end}}!</h1>
 				<button @click="retry()">Retry</button>
 			</div>
-			<div class="game-grid">
-				<div v-for="(cell, index) in cells" :key="index" class="cell"
-					:class="getCellImgClass(cell.cell).class" alt="cell" 
-					width="32px" height="32px" :cell-x="cell.x" :cell-y="cell.y"
-					@click="reveal($event)" @contextmenu.prevent="flag($event)">
-				</div>
-			</div>
+			<GameComponent :gameSocket="gameSocket"></GameComponent>
 		</div>
 		
 		<div id="button-container">
@@ -28,12 +22,98 @@
 </template>
 
 <script>
+
+import GameComponent from '../GameComponent.vue';
+
 export default {
-	name: 'SingleplayerPage'
+	name: 'SingleplayerPage',
+	components: {
+		GameComponent
+	},
+	data() {
+		return {
+			gameSocket: null,
+			elapsed: 0,
+			undos: 0,
+			end: undefined
+		}
+	},
+	created() {
+		let self = this;
+		this.gameSocket = new WebSocket("ws://localhost:9000/api/ws")
+		this.gameSocket.onopen = () => {
+			console.log("ws open");
+			this.gameSocket.send(JSON.stringify({ type: "open" }));
+		};
+		this.gameSocket.onclose = () => console.log("ws close");
+		this.gameSocket.onerror = () => console.error("ws error");
+		this.gameSocket.onmessage = (msg) => handleWsMessage(msg, self);
+	},
+	methods: {
+		main_menu() {
+			fetch('/api/restart').then(reload_page);
+		},
+		retry() {
+			fetch('/api/retry').then(reload_page);
+		},
+		undo() {
+			this.gameSocket.send(JSON.stringify({
+				"type": "undo"
+			}));
+		},
+		redo() {
+			this.gameSocket.send(JSON.stringify({
+				"type": "redo"
+			}));
+		}
+	}
+}
+
+async function updateGame(state, self, gameID) {
+	if (self.$refs[gameID].cells.length === 0) {
+		const root = document.querySelector(':root');
+		root.style.setProperty('--grid-width', state.width);
+		root.style.setProperty('--grid-height', state.height);
+
+		// create timer
+		setInterval(() => {
+			if (!self.end) {
+				self.elapsed = self.elapsed + 1;
+			}
+		}, 1000);
+	}
+
+	// update the cells
+	self.$refs[gameID].cells = state.cells
+
+	// sync the timer with the server timer
+	self.elapsed = state.timer;
+
+	// update the undos
+	self.undos = state.undos;
+}
+
+function handleWsMessage(msg, self) {
+	const state = JSON.parse(msg.data);
+
+	if (state.reload) {
+		reload_page();
+		return;
+	}
+
+	if (state.end) {
+		self.end = state.end;
+		return;
+	}
+
+	updateGame(state, self, 'game_grid');
+}
+
+function reload_page() {
+	window.location.reload();
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 :root {
     --player-count: 1;
@@ -75,40 +155,6 @@ export default {
     align-items: center;
     gap: 1rem;
 }
-
-.game-grid {
-    display: grid;
-    width: var(--game-width);
-    grid-template-columns: repeat(var(--grid-width), var(--cell-size));
-    grid-template-rows: repeat(var(--grid-height), var(--cell-size));
-    padding: calc(var(--cell-size) / 2);
-    background-color: var(--dark-color);
-    border-radius: calc(var(--cell-size) / 2);
-}
-
-.cell {
-    width: var(--cell-size);
-    height: var(--cell-size);
-    background-size: cover;
-    background-repeat: no-repeat;
-}
-
-.cell:hover {
-    filter: brightness(120%);
-}
-
-.cell.unrevealed { background-image: url(/public/images/unrevealed.png); }
-.cell.revealed { background-image: url(/public/images/revealed.png); }
-.cell.bomb { background-image: url(/public/images/bomb.png); }
-.cell.flagged { background-image: url(/public/images/flagged.png); }
-.cell.revealed-1 { background-image: url(/public/images/1.png); }
-.cell.revealed-2 { background-image: url(/public/images/2.png); }
-.cell.revealed-3 { background-image: url(/public/images/3.png); }
-.cell.revealed-4 { background-image: url(/public/images/4.png); }
-.cell.revealed-5 { background-image: url(/public/images/5.png); }
-.cell.revealed-6 { background-image: url(/public/images/6.png); }
-.cell.revealed-7 { background-image: url(/public/images/7.png); }
-.cell.revealed-8 { background-image: url(/public/images/8.png); }
 
 #button-container {
     display: flex;

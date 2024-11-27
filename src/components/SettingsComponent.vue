@@ -1,9 +1,9 @@
 <template>
-	<form id="settings" @@submit.prevent="" v-if="state === 'singleplayer-settings' || state === 'create-lobby'">
+	<form id="settings" @submit.prevent="">
 		<h2>Board Settings</h2>
 		<div id="settings-inputs">
-			<label v-if="state === 'create-lobby'">Username:</label>
-			<input v-model="username" v-if="state === 'create-lobby'" type="text" :invalid="!username" required />
+			<label>Username:</label>
+			<input v-model="username" type="text" :invalid="!username" required />
 
 			<label>Board Width:</label>
 			<input v-model="width" type="number" :invalid="!width" required min="1" max="32" />
@@ -22,9 +22,9 @@
 		</div>
 
 		<div id="settings-buttons">
-			<button v-if="state === 'singleplayer-settings'" @click="startGame()" :disabled="!width || !height || max_undos===''">Start Singleplayer</button>
-			<button v-if="state === 'create-lobby'" :disabled=createLobbyDisabled >Create Lobby</button>
-			<button v-if="state === 'create-lobby'" :disabled=startMultiplayerDisabled >Start Game</button>
+			<button v-if="multiplayer === 'false'" @click="startGame()" :disabled="!width || !height || max_undos===''">Start Singleplayer</button>
+			<button v-if="multiplayer === 'true'" :disabled=createLobbyDisabled >Create Lobby</button>
+			<button v-if="multiplayer === 'true'" :disabled=startMultiplayerDisabled >Start Game</button>
 		</div>
 	</form>
 </template>
@@ -33,15 +33,15 @@
 export default {
 	name: 'SettingsComponent',
 	props: {
-		state: String
+		multiplayer: Boolean
 	},
-	emits: ['state-changed'],
-	setup(props, ctx) {
-		function startGame() {
-			ctx.emit('state-changed', 'singleplayer');
-		}
+	data() {
 		return {
-			startGame,
+			username: "",
+			width: 10,
+			height: 10,
+			bomb_chance: 0.5,
+			max_undos: 3,
 		}
 	}
 }
@@ -49,23 +49,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#start-body {
-    height: 100%;
-}
-
-#mode-select {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    gap: 1rem;
-}
-
-#mode-select button {
-    width: 40%;
-}
-
 #settings {
     display: flex;
     flex-direction: column;
@@ -106,57 +89,6 @@ export default {
 [invalid=true] {
     border-color: red !important;
     background-color: rgb(161, 77, 77) !important;
-}
-
-#lobby-list {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#lobby-list #opts {
-    height: 2rem;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-#lobby-list #opts input { height: 1rem; }
-
-#cards {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-}
-
-#cards .lobby-card {
-    display: grid;
-    width: 90%;
-    height: 2rem;
-    padding: .5rem;
-    grid-template-columns: 3fr 1fr 1fr;
-    align-items: center;
-    background-color: var(--dark-color);
-    border-radius: 1rem;
-    border: var(--medium-color) inset 1px;
-}
-
-#cards .lobby-card span {
-    align-content: center;
-    padding: .5rem;
-    border-right: 1px var(--highlight-color) solid;
-}
-
-#cards .lobby-card button {
-    height: 2rem;
-    width: 5rem;
-    margin: auto;
 }
 
 @media screen and (max-width: 500px) {

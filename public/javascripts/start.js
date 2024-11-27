@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		data() {
 			return {
 				lobbies: [],
-				state: "mode-select",
 				username: "",
 				width: 10,
 				height: 10,

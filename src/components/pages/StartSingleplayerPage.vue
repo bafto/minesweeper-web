@@ -1,12 +1,12 @@
 <template>
-	<SettingsComponent multiplayer="true"/>
+	<SettingsComponent multiplayer="false"/>
 </template>
 
 <script>
 import SettingsComponent from '../SettingsComponent.vue';
 
 export default {
-	name: "CreateLobbyPage",
+	name: 'StartSingleplayerPage',
 	components: {
 		SettingsComponent
 	}
