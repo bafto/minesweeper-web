@@ -10,7 +10,7 @@
 				<h1>You {{end}}!</h1>
 				<button @click="retry()">Retry</button>
 			</div>
-			<GameComponent :gameSocket="gameSocket"></GameComponent>
+			<GameComponent :gameSocket="gameSocket" ref="game_grid"></GameComponent>
 		</div>
 		
 		<div id="button-container">
@@ -114,13 +114,14 @@ function reload_page() {
 }
 </script>
 
-<style scoped>
+<style>
 :root {
     --player-count: 1;
     --cell-size: clamp(16px, round(calc(5vw / var(--player-count)), 1px), 32px);
     --game-width: calc(var(--grid-width) * var(--cell-size));
 }
-
+</style>
+<style scoped>
 #game {
     display: flex;
     flex-direction: column;

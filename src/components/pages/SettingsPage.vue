@@ -2,8 +2,8 @@
 	<form id="settings" @submit.prevent="">
 		<h2>Board Settings</h2>
 		<div id="settings-inputs">
-			<label v-if="multiplayer === 'true'">Username:</label>
-			<input v-if="multiplayer === 'true'" v-model="username" type="text" required />
+			<label v-if="multiplayer">Username:</label>
+			<input v-if="multiplayer" v-model="username" type="text" required />
 
 			<label>Board Width:</label>
 			<input v-model="width" type="number" required min="1" max="32" />
@@ -22,9 +22,9 @@
 		</div>
 
 		<div id="settings-buttons">
-			<button v-if="multiplayer === 'false'" @click="startGame()" :disabled="disableButtons">Start Singleplayer</button>
-			<button v-if="multiplayer === 'true'" @click=selectMultiplayer() :disabled="disableButtons">Create Lobby</button>
-			<button v-if="multiplayer === 'true'" @click=startMultiplayer() :disabled="disableButtons">Start Game</button>
+			<RouterLink to="/singleplayer" v-if="!multiplayer" @click="startGame()" :disabled="disableButtons">Start Singleplayer</RouterLink>
+			<button v-if="multiplayer" @click=selectMultiplayer() :disabled="disableButtons">Create Lobby</button>
+			<button v-if="multiplayer" @click=startMultiplayer() :disabled="disableButtons">Start Game</button>
 		</div>
 	</form>
 </template>
@@ -63,7 +63,7 @@ export default {
 					bomb_chance: parseFloat(this.bomb_chance),
 					max_undos: this.max_undos
 				})
-			}).then(window.location.reload.bind(window.location)).catch(console.error);
+			}).catch(console.error);
 		},
 		async selectMultiplayer() {
 			fetch('/api/select_multiplayer', {

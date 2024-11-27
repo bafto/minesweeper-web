@@ -1,9 +1,9 @@
 <template>
 	<div id="mode-select">
 		<h1>Select a game mode</h1>
-		<router-link to="/start-singleplayer" class="btn">Play Singleplayer</router-link>
-		<router-link to="/create-lobby" class="btn">Create Multiplayer Lobby</router-link>
-		<router-link to="/join-lobby" class="btn">Join Multiplayer Lobby</router-link>
+		<RouterLink to="/start-singleplayer" class="btn">Play Singleplayer</RouterLink>
+		<RouterLink to="/create-lobby" class="btn">Create Multiplayer Lobby</RouterLink>
+		<RouterLink to="/join-lobby" class="btn">Join Multiplayer Lobby</RouterLink>
 	</div>
 </template>
 
