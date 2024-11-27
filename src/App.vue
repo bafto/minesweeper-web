@@ -1,31 +1,33 @@
 <template>
-	<JoinLobbyPage v-if="state === 'list-lobbies'" :state="state" @state-changed="handleStateChanged"/>
-	<SelectGamemodePage v-if="state === 'mode-select'" :state="state" @state-changed="handleStateChanged" />
-	<SingleplayerPage v-if="state === 'singleplayer'" :state="state" @state-changed="handleStateChanged" />
-	<CreateLobbyPage v-if="state === 'create-lobby'" :state="state" @state-changed="handleStateChanged" />
-	<SettingsComponent v-if="state === 'singleplayer-settings' || state == 'create-lobby'" :state="state" @state-changed="handleStateChanged" />
+	<header>
+		<div id="header-title">
+			<router-link to="/">
+				<img id="logo" src='../public/images/favicon.png' alt="minesweeper logo" width="32px" height="32px" title="go back">
+			</router-link>
+			<h1>Minesweeper</h1>
+		</div>
+		<div>
+			<a href="https://github.com/bafto/minesweeper-web" target="_blank">
+				<img invert src='../public/images/github.svg' alt="github logo" width="32px" height="32px" title="Github">
+			</a>
+		</div>
+	</header>
+
+	<main>
+		<RouterView></RouterView>
+	</main>
+
+	<footer>
+		<router-link to="/about">Über Minesweeper</router-link>
+	</footer>
 </template>
 
 <script>
-import SelectGamemodePage from './components/pages/SelectGamemodePage.vue';
-import CreateLobbyPage from './components/pages/CreateLobbyPage.vue';
-import SingleplayerPage from './components/pages/SingleplayerPage.vue';
-import JoinLobbyPage from './components/pages/JoinLobbyPage.vue';
-import SettingsComponent from './components/SettingsComponent.vue';
-
 export default {
 	name: 'App',
-	components: {
-		SelectGamemodePage,
-		CreateLobbyPage,
-		SingleplayerPage,
-		JoinLobbyPage,
-		SettingsComponent,
-	},
 	data() {
 		return {
 			lobbies: [],
-			state: "mode-select",
 			username: "",
 			width: 10,
 			height: 10,
@@ -33,25 +35,150 @@ export default {
 			max_undos: 3,
 			socket: null
 		};
-
-	},
-	methods: {
-		handleStateChanged(newState) {
-			console.log('oldState = ' + this.state);
-			console.log('newState = ' + newState);
-			this.state = newState;
-		}
 	}
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+:root {
+    font-family: "Roboto Light", Arial, Helvetica, sans-serif;
+
+    --text-color: #eaeaea;
+    --medium-color: #333;
+    --dark-color: #222;
+    --light-color: #444;
+    --highlight-color: #555;
+}
+
+:link,
+a:visited {
+    color: var(--text-color)
+}
+
+img[invert] {
+    filter: invert();
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+    background-color: var(--medium-color);
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: var(--dark-color);
+    padding: 0 1rem;
+    height: 80px;
+}
+
+#header-title {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    text-decoration: none;
+    gap: 1rem;
+}
+
+header #logo {
+    transition: transform 1s ease;
+}
+
+header #logo:hover {
+    transform: rotate(360deg);
+}
+
+main {
+    padding: 1rem;
+    height: 100%;
+}
+
+footer {
+    padding: 1rem;
+}
+
+button, .btn {
+    border-radius: .5rem;
+    padding: .5rem;
+    color: white;
+    background-color: var(--light-color);
+    border-style: outset;
+    border-color: var(--dark-color);
+    cursor: pointer;
+    transition: background-color 200ms linear;
+	text-decoration: none;
+}
+
+:is(button, .btn):disabled {
+    background-color: color-mix(in srgb, var(--light-color), transparent 60%);
+    border-color: color-mix(in srgb, var(--dark-color), transparent 60%);
+    color: color-mix(in srgb, white, transparent 60%);
+    cursor: revert;
+}
+
+input {
+    border-color: var(--dark-color);
+    background-color: var(--light-color);
+    color: white;
+    outline: none;
+    border-style: inset;
+    appearance: textfield; /* funktioniert für firefox, aber nicht chrome */
+    transition: background-color 200ms linear;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    appearance: none;
+}
+
+/* style für sliders */
+input[type=range] {
+    appearance: none;
+    border-color: var(--dark-color);
+    background-color: var(--light-color);
+    border-style: inset;
+    cursor: pointer;
+    width: 100%;
+    padding: 1px 0;
+    border-width: 2px;
+    margin: 0;
+}
+
+/*  Style muss leider kopiert werden, da selector lists ignoriert werden,
+    wenn ein pseudo element, welches der Browser nicht kennt, vorhanden ist */
+
+/* Slider Thumb style für webkit browsers */
+input[type=range]::-webkit-slider-thumb {
+    appearance: none;
+    height: 1rem;
+    width: 0.5rem;
+    border: 1px outset var(--dark-color);
+    background-color: var(--medium-color);
+    border-radius: 2px;
+}
+
+/* Slider Thumb für Firefox */
+input[type=range]::-moz-range-thumb {
+    appearance: none;
+    height: 1rem;
+    width: 0.5rem;
+    border: 1px outset var(--dark-color);
+    background-color: var(--medium-color);
+    border-radius: 2px;
+}
+
+:is(button,input):not(:disabled):hover {
+    background-color: var(--highlight-color);
 }
 </style>

@@ -1,23 +1,19 @@
 <template>
   <div id="start-body">
-	<div v-if="state === 'mode-select'" id="mode-select">
+	<div>
 		<h1>Select a game mode</h1>
-		<button @click="$emit('state-changed', 'singleplayer-settings')">Play Singleplayer</button>
-		<button @click="$emit('state-changed', 'create-lobby')">Create Multiplayer Lobby</button>
-		<button @click="$emit('state-changed', 'list-lobby')"> Join Multiplayer Lobby</button>
+		<router-link to="/singleplayer" class="btn">Play Singleplayer</router-link>
+		<router-link to="/create-lobby" class="btn">Create Multiplayer Lobby</router-link>
+		<router-link to="/lobby-list" class="btn">Join Multiplayer Lobby</router-link>
 	</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'SelectGamemodePage',
-	props: {
-		state: String,
-	}
+  name: 'SelectGamemodePage'
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 </style>

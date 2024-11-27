@@ -8,7 +8,6 @@ import SettingsComponent from '../SettingsComponent.vue';
 export default {
 	name: 'JoinLobbyPage',
 	props: {
-		state: String,
 		lobbies: Array,
 	},
 	components: {
