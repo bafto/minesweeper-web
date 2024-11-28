@@ -22,9 +22,9 @@
 		</div>
 
 		<div id="settings-buttons">
-			<RouterLink to="/singleplayer" v-if="!multiplayer" @click="startGame()" :disabled="disableButtons">Start Singleplayer</RouterLink>
-			<button v-if="multiplayer" @click=selectMultiplayer() :disabled="disableButtons">Create Lobby</button>
-			<button v-if="multiplayer" @click=startMultiplayer() :disabled="disableButtons">Start Game</button>
+			<RouterLink to="/singleplayer" v-if="!multiplayer" @click="startGame()" :disabled="disableButtons" class="btn">Start Singleplayer</RouterLink>
+			<button v-if="multiplayer" @click=selectMultiplayer() :disabled="disableButtons" class="btn">Create Lobby</button>
+			<button v-if="multiplayer" @click=startMultiplayer() :disabled="disableButtons" class="btn">Start Game</button>
 		</div>
 	</form>
 </template>
@@ -185,7 +185,7 @@ function handleWsMessage(m) {
     width: 60%;
 }
 
-#settings-buttons button {
+#settings-buttons .btn {
     width: 100%;
     text-wrap: nowrap;
 }

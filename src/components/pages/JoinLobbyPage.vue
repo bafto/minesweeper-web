@@ -8,7 +8,7 @@
 		</div>
 		<div id="cards">
 			<LobbyCard v-for="lobby in lobbies" :key="lobby.username" :lobby="lobby" :username="username" />
-			<p v-if="lobbies.length === 0">No lobbies found</p>
+			<p v-if="!lobbies || lobbies.length === 0">No lobbies found</p>
 		</div>
 	</div>
 </template>

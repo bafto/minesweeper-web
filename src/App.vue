@@ -110,6 +110,9 @@ footer {
 }
 
 button, .btn {
+    text-align: center;
+    box-sizing: border-box;
+    border-width: 2px;
     border-radius: .5rem;
     padding: .5rem;
     color: white;
