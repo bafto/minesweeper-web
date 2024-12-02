@@ -92,6 +92,19 @@ header {
     gap: 1rem;
 }
 
+
+@media screen and (max-width: 500px) {
+    #header-title h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    #header-title h1 {
+        display: none;
+    }
+}
+
 header #logo {
     transition: transform 1s ease;
 }
@@ -139,6 +152,11 @@ input {
     border-style: inset;
     appearance: textfield; /* funktioniert für firefox, aber nicht chrome */
     transition: background-color 200ms linear;
+}
+
+input:user-invalid {
+    border-color: red !important;
+    background-color: rgb(161, 77, 77) !important;
 }
 
 input[type=number]::-webkit-inner-spin-button,

@@ -51,10 +51,10 @@ export default {
 	},
 	methods: {
 		main_menu() {
-			fetch('/api/restart').then(reload_page);
+			fetch('/api/restart')
 		},
 		retry() {
-			fetch('/api/retry').then(reload_page);
+			fetch('/api/retry')
 		},
 		undo() {
 			GameSocket.Get().send(JSON.stringify({
@@ -96,21 +96,12 @@ async function updateGame(state, self, gameID) {
 function handleWsMessage(msg, self) {
 	const state = JSON.parse(msg.data);
 
-	if (state.reload) {
-		reload_page();
-		return;
-	}
-
 	if (state.end) {
 		self.end = state.end;
 		return;
 	}
 
 	updateGame(state, self, 'game_grid');
-}
-
-function reload_page() {
-	window.location.reload();
 }
 </script>
 

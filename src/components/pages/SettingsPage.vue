@@ -1,4 +1,7 @@
 <template>
+	<div v-if="multiplayer && waiting" id="waiting-overlay">
+		<h1>Waiting for player...</h1>
+	</div>
 	<form id="settings" @submit.prevent="">
 		<h2>Board Settings</h2>
 		<div id="settings-inputs">
@@ -22,9 +25,9 @@
 		</div>
 
 		<div id="settings-buttons">
+			<RouterLink to="/" class="btn">Go back</RouterLink>
 			<RouterLink to="/singleplayer" v-if="!multiplayer" @click="startGame()" :disabled="disableButtons" class="btn">Start Singleplayer</RouterLink>
 			<button v-if="multiplayer" @click=selectMultiplayer() :disabled="disableButtons" class="btn">Create Lobby</button>
-			<button v-if="multiplayer" @click=startMultiplayer() :disabled="disableButtons" class="btn">Start Game</button>
 		</div>
 	</form>
 </template>
@@ -39,6 +42,7 @@ export default {
 	},
 	data() {
 		return {
+			waiting: false,
 			username: "dummy",
 			width: 10,
 			height: 10,
@@ -89,18 +93,6 @@ export default {
 					start_multiplayer_ws(this.username, this);
 				}
 			}).catch(console.error);
-		},
-		startMultiplayer() {
-			fetch("/api/start_multiplayer", {
-				method: "POST",
-				body: JSON.stringify({
-					lobby: this.username,
-				}),
-				headers: {
-					'Content-Type': 'application/json',
-					'Csrf-Token': getCookieByName('play-csrf-token'),
-				},
-			}).then(() => console.log("started")).catch(console.error);
 		}
 	}
 }
@@ -120,6 +112,7 @@ function start_multiplayer_ws(username, self) {
 	const socket = GameSocket.Connect(`ws://localhost:9000/api/ws/multiplayer?username=${username}&lobby=${username}`);
 	socket.onopen = () => {
 		console.log("ws open");
+		self.waiting = true;
 	};
 	socket.onclose = () => console.log("ws close");
 	socket.onerror = () => console.error("ws error");
@@ -128,12 +121,26 @@ function start_multiplayer_ws(username, self) {
 	return socket;
 }
 
+async function startMultiplayer(lobbyName) {
+	fetch("/api/start_multiplayer", {
+		method: "POST",
+		body: JSON.stringify({
+			lobby: lobbyName,
+		}),
+		headers: {
+			'Content-Type': 'application/json',
+			'Csrf-Token': getCookieByName('play-csrf-token'),
+		},
+	}).then(() => console.log("started")).catch(console.error);
+}
+
 function handleWsMessage(m, self) {
 	const msg = JSON.parse(m.data);
 
 	switch (msg.type) {
 		case "status": {
 			console.log(msg.message);
+			startMultiplayer(self.username)
 			break;
 		}
 		case "won/lost": {
@@ -162,6 +169,20 @@ function handleWsMessage(m, self) {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#waiting-overlay {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 80%;
+	height: 30%;
+	position: absolute;
+	top: 30%;
+	left: 10%;
+	box-shadow: 0 0 10px #22222290;
+	background-color: #00000080;
+	border-radius: 1rem;
+}
+
 #settings {
     display: flex;
     flex-direction: column;
@@ -199,27 +220,16 @@ function handleWsMessage(m, self) {
     text-wrap: nowrap;
 }
 
-input:user-invalid {
-    border-color: red !important;
-    background-color: rgb(161, 77, 77) !important;
-}
-
 @media screen and (max-width: 500px) {
     #settings-inputs {
         grid-template-columns: none;
         grid-template-rows: var(--inputs-grid);
-    }
-    #header-title h1 {
-        font-size: 1.5rem;
     }
 }
 
 @media screen and (max-width: 320px) {
     #settings-buttons button {
         text-wrap: wrap;
-    }
-    #header-title h1 {
-        display: none;
     }
 }
 </style>

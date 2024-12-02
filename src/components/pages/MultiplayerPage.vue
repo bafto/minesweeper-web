@@ -47,8 +47,18 @@ export default {
 	created() {
 		let self = this;
 		GameSocket.Get().onmessage = (msg) => handleWsMessage(msg, self);
+
+		// create timer
+		setInterval(() => {
+			if (!self.end) {
+				self.elapsed = self.elapsed + 1;
+			}
+		}, 1000);
 	},
 	methods: {
+		main_menu() {
+			fetch('/api/restart')
+		},
 		undo() {
 			GameSocket.Get().send(JSON.stringify({
 				"type": "undo"
@@ -64,16 +74,10 @@ export default {
 
 async function updateGame(state, self, gameID) {
 	if (self.$refs[gameID][0].cells.length === 0) {
-		const root = document.querySelector(':root');
-		root.style.setProperty('--grid-width', state.width);
-		root.style.setProperty('--grid-height', state.height);
-
-		// create timer
-		setInterval(() => {
-			if (!self.end) {
-				self.elapsed = self.elapsed + 1;
-			}
-		}, 1000);
+		const rootStyle = document.querySelector(':root').style;
+		rootStyle.setProperty('--player-count', self.players.length);
+		rootStyle.setProperty('--grid-width', state.width);
+		rootStyle.setProperty('--grid-height', state.height);
 	}
 
 	// update the cells
@@ -172,7 +176,7 @@ function reload_page() {
     justify-content: space-between;
     align-items: center;
     margin-top: 2rem;
-    width: var(--grid-width);
+    width: calc((var(--game-width) + 1rem) * var(--player-count) + 1rem);
     gap: 10px;
 }
 

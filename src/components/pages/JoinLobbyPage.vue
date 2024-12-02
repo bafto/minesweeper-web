@@ -10,6 +10,7 @@
 			<LobbyCard v-for="lobby in lobbies" :key="lobby.username" :lobby="lobby" :username="username" />
 			<p v-if="!lobbies || lobbies.length === 0">No lobbies found</p>
 		</div>
+		<RouterLink to="/" class="btn">Go back</RouterLink>
 	</div>
 </template>
 
