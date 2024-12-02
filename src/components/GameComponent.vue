@@ -9,13 +9,12 @@
 </template>
 
 <script>
+import GameSocket from '../websocket.js';
+
 export default {
 	name: "GameComponent",
 	props: {
-		gameSocket: {
-            type: Object,
-            required: true,
-        },
+		inputEnabled: Boolean,
 	},
 	data() {
 		return {
@@ -24,8 +23,12 @@ export default {
 	},
 	methods: {
 		reveal(event) {
+			if (!this.inputEnabled) {
+				return;
+			}
+
 			const xy = getCellXY(event.target);
-			this.gameSocket.send(JSON.stringify({
+			GameSocket.Get().send(JSON.stringify({
 				type: "reveal",
 				data: {
 					x: Number.parseInt(xy.x),
@@ -34,8 +37,12 @@ export default {
 			}));
 		},
 		flag(event) {
+			if (!this.inputEnabled) {
+				return;
+			}
+
 			const xy = getCellXY(event.target);
-			this.gameSocket.send(JSON.stringify({
+			GameSocket.Get().send(JSON.stringify({
 				type: "flag",
 				data: {
 					x: Number.parseInt(xy.x),

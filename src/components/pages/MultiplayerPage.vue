@@ -10,7 +10,9 @@
 				<h1>You {{end}}!</h1>
 				<button @click="retry()">Retry</button>
 			</div>
-			<GameComponent ref="game_grid" :inputEnabled="true"></GameComponent>
+			<div v-for="player in players" :key="player">
+				<GameComponent :ref="player" :inputEnabled="player === username"></GameComponent>
+			</div>
 		</div>
 		
 		<div id="button-container">
@@ -27,9 +29,13 @@ import GameComponent from '../GameComponent.vue';
 import GameSocket from '../../websocket.js';
 
 export default {
-	name: 'SingleplayerPage',
+	name: 'MultiplayerPage',
 	components: {
 		GameComponent
+	},
+	props: {
+		username: String,
+		players: Array,
 	},
 	data() {
 		return {
@@ -40,22 +46,9 @@ export default {
 	},
 	created() {
 		let self = this;
-		const gameSocket = GameSocket.Connect("ws://localhost:9000/api/ws/singleplayer")
-		gameSocket.onopen = () => {
-			console.log("ws open");
-			gameSocket.send(JSON.stringify({ type: "open" }));
-		};
-		gameSocket.onclose = () => console.log("ws close");
-		gameSocket.onerror = () => console.error("ws error");
-		gameSocket.onmessage = (msg) => handleWsMessage(msg, self);
+		GameSocket.Get().onmessage = (msg) => handleWsMessage(msg, self);
 	},
 	methods: {
-		main_menu() {
-			fetch('/api/restart').then(reload_page);
-		},
-		retry() {
-			fetch('/api/retry').then(reload_page);
-		},
 		undo() {
 			GameSocket.Get().send(JSON.stringify({
 				"type": "undo"
@@ -70,7 +63,7 @@ export default {
 }
 
 async function updateGame(state, self, gameID) {
-	if (self.$refs[gameID].cells.length === 0) {
+	if (self.$refs[gameID][0].cells.length === 0) {
 		const root = document.querySelector(':root');
 		root.style.setProperty('--grid-width', state.width);
 		root.style.setProperty('--grid-height', state.height);
@@ -84,7 +77,7 @@ async function updateGame(state, self, gameID) {
 	}
 
 	// update the cells
-	self.$refs[gameID].cells = state.cells
+	self.$refs[gameID][0].cells = state.cells;
 
 	// sync the timer with the server timer
 	self.elapsed = state.timer;
@@ -93,20 +86,36 @@ async function updateGame(state, self, gameID) {
 	self.undos = state.undos;
 }
 
-function handleWsMessage(msg, self) {
-	const state = JSON.parse(msg.data);
+function handleWsMessage(m, self) {
+	const msg = JSON.parse(m.data);
 
-	if (state.reload) {
-		reload_page();
-		return;
+	switch (msg.type) {
+		case "status": {
+			console.log(msg.message);
+			break;
+		}
+		case "won/lost": {
+			console.log("won/lost");
+			break;
+		}
+		case "update": {
+			if (msg.reload) {
+				reload_page();
+				return;
+			}
+
+			if (msg.end) {
+				self.end = msg.end;
+				return;
+			}
+
+			updateGame(msg, self, msg.username);
+			break;
+		}
+		case "error": {
+			console.error(msg.message)
+		}
 	}
-
-	if (state.end) {
-		self.end = state.end;
-		return;
-	}
-
-	updateGame(state, self, 'game_grid');
 }
 
 function reload_page() {

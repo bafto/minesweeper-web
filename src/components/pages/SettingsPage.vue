@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import GameSocket from '../../websocket.js';
+
 export default {
 	name: 'SettingsComponent',
 	props: {
@@ -84,7 +86,7 @@ export default {
 				if (json.error) {
 					console.error(json.error);
 				} else {
-					this.socket = start_multiplayer_ws(this.username);
+					start_multiplayer_ws(this.username, this);
 				}
 			}).catch(console.error);
 		},
@@ -114,19 +116,19 @@ function getCookieByName(name) {
 	return null;
 }
 
-function start_multiplayer_ws(username) {
-	const socket = new WebSocket(`ws://localhost:9000/api/ws/multiplayer?username=${username}&lobby=${username}`)
+function start_multiplayer_ws(username, self) {
+	const socket = GameSocket.Connect(`ws://localhost:9000/api/ws/multiplayer?username=${username}&lobby=${username}`);
 	socket.onopen = () => {
 		console.log("ws open");
 	};
 	socket.onclose = () => console.log("ws close");
 	socket.onerror = () => console.error("ws error");
-	socket.onmessage = handleWsMessage;
+	socket.onmessage = (msg) => handleWsMessage(msg, self);
 
 	return socket;
 }
 
-function handleWsMessage(m) {
+function handleWsMessage(m, self) {
 	const msg = JSON.parse(m.data);
 
 	switch (msg.type) {
@@ -144,8 +146,15 @@ function handleWsMessage(m) {
 			break;
 		}
 		case "setup": {
-			console.log("setup", msg.numPlayers);
+			console.log("setup", msg.players);
+			self.$router.push({
+				path: "/multiplayer",
+				query: {players: msg.players, username: self.username },
+			});
 			break;
+		}
+		case "error": {
+			console.error(msg.message)
 		}
 	}
 }

@@ -128,7 +128,7 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
     val lobbiesJson = lobbies.map { case (lobbyName, (_, players)) =>
       Json.obj(
         "name" -> lobbyName,
-        "players" -> players.map(_.id) // Extract the player IDs
+        "players" -> players.map(_.username) // Extract the player IDs
       )
     }
     Ok(Json.toJson(lobbiesJson))
@@ -219,9 +219,14 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
       {
         val lobby = (request.body \ "lobby").as[String]
         if !lobbies.contains(lobby) then {
-          Ok(Json.obj("error" -> "no lobby open"))
+          Ok(Json.obj("type" -> "error", "message" -> "no lobby open"))
         } else if lobbies(lobby)(1).length < 2 then {
-          Ok(Json.obj("error" -> "not enough players in lobby"))
+          Ok(
+            Json.obj(
+              "type" -> "error",
+              "message" -> "not enough players in lobby"
+            )
+          )
         } else {
 
           var playerMap = Map[String, Player]()
@@ -231,7 +236,7 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
               MinesweeperController(RandomFieldFactory(Random()), FileIO())
             controller.setup()
             player.setController(controller)
-            playerMap = playerMap + (player.id -> player)
+            playerMap = playerMap + (player.username -> player)
           }
 
           MultiplayerWebsocketDispatcher(playerMap, lobbies(lobby)(0))

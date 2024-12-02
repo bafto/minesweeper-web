@@ -177,7 +177,7 @@ class MultiplayerWebsocketActor(
 }
 
 class Player(
-    val id: String,
+    val username: String,
     val dcCallback: (Player) => Unit
 ) extends Observable[(String, Event, MinesweeperController, Long)]
     with Observer[Event] {
@@ -207,8 +207,9 @@ class Player(
   override def update(e: Event): Unit = {
     e match {
       case StartGameEvent(_) => start_time = current_time_seconds
+      case _                 => {}
     }
-    this.notifyObservers((id, e, this.controller, getTime))
+    this.notifyObservers((username, e, this.controller, getTime))
   }
 }
 
@@ -219,7 +220,10 @@ class MultiplayerWebsocketDispatcher(
     with Observer[(String, Event, MinesweeperController, Long)] {
   for (_, player) <- players do player.addObserver(this)
   for (_, player) <- players do
-    player.ws.out ! Json.obj("type" -> "setup", "numPlayers" -> players.size)
+    player.ws.out ! Json.obj(
+      "type" -> "setup",
+      "players" -> players.keySet.toList
+    )
   for (_, player) <- players do player.controller.startGame.tupled(startOpts)
 
   override def update(e: (String, Event, MinesweeperController, Long)): Unit =

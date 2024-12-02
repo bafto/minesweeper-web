@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import GameSocket from '../websocket.js';
+
 export default {
 	name: "LobbyCard",
 	props: {
@@ -21,30 +23,41 @@ export default {
 	},
 	methods: {
 		joinLobby() {
-			if (this.socket) {
+			if (GameSocket.Get()) {
 				return;
 			}
 
-			const socket = new WebSocket(`ws://localhost:9000/api/ws/multiplayer?username=${this.username}&lobby=${this.lobby.name}`)
+			const socket = GameSocket.Connect(`ws://localhost:9000/api/ws/multiplayer?username=${this.username}&lobby=${this.lobby.name}`)
 			socket.onopen = () => {
 				console.log("ws open");
 			};
 			socket.onclose = () => console.log("ws close");
 			socket.onerror = () => console.error("ws error");
-			socket.onmessage = handleWsMessage;
-
-			this.socket = socket;
+			socket.onmessage = (msg) => handleWsMessage(msg, this);
 		}
 	}
 }
 
 
-function handleWsMessage(msg) {
-	const state = JSON.parse(msg.data);
+function handleWsMessage(m, self) {
+	const msg = JSON.parse(m.data);
 
-	if (state.reload) {
-		window.location.reload();
-		return;
+	switch (msg.type) {
+		case "status": {
+			console.log(msg.message);
+			break;
+		}
+		case "setup": {
+			console.log("setup", msg.players);
+			self.$router.push({
+				path: "/multiplayer",
+				query: {players: msg.players, username: self.username },
+			});
+			break;
+		}
+		case "error": {
+			console.error(msg.message)
+		}
 	}
 }
 </script>
