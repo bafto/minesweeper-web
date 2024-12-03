@@ -27,7 +27,7 @@
 		<div id="settings-buttons">
 			<RouterLink to="/" class="btn">Go back</RouterLink>
 			<RouterLink to="/singleplayer" v-if="!multiplayer" @click="startGame()" :disabled="disableButtons" class="btn">Start Singleplayer</RouterLink>
-			<button v-if="multiplayer" @click=selectMultiplayer() :disabled="disableButtons" class="btn">Create Lobby</button>
+			<button v-if="multiplayer && !waiting" @click=selectMultiplayer() :disabled="disableButtons" class="btn">Create Lobby</button>
 		</div>
 	</form>
 </template>

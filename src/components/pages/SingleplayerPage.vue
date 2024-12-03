@@ -51,10 +51,14 @@ export default {
 	},
 	methods: {
 		main_menu() {
-			fetch('/api/restart')
+			fetch('/api/restart');
+			this.$router.push({path: '/'});
 		},
 		retry() {
-			fetch('/api/retry')
+			const self = this;
+			fetch('/api/retry').then(() => {
+				self.end = undefined;
+			})
 		},
 		undo() {
 			GameSocket.Get().send(JSON.stringify({
@@ -98,6 +102,10 @@ function handleWsMessage(msg, self) {
 
 	if (state.end) {
 		self.end = state.end;
+		return;
+	}
+
+	if (state.reload) {
 		return;
 	}
 
