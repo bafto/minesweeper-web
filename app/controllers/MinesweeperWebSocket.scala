@@ -156,8 +156,16 @@ class MultiplayerWebsocketActor(
     val (user, e, controller, time) = ev
     e match {
       case SetupEvent() => println("setup" + user)
-      case WonEvent() | LostEvent() =>
-        out ! Json.obj("type" -> "won/lost")
+      case LostEvent() =>
+        out ! Json.obj(
+          "type" -> "lost",
+          "username" -> user
+        )
+      case WonEvent() =>
+        out ! Json.obj(
+          "type" -> "won",
+          "username" -> user
+        )
       case StartGameEvent(_) | FieldUpdatedEvent(_) =>
         out ! gameStateJson(user, controller, time)
       case _ => {}

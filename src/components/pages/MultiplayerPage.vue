@@ -7,7 +7,7 @@
 		
 		<div id="grids-container">
 			<div v-if="end" id="end-overlay">
-				<h1>You {{end}}!</h1>
+				<h1>{{endPlayer}} {{end}}!</h1>
 				<button @click="retry()">Retry</button>
 			</div>
 			<div v-for="player in players" :key="player">
@@ -41,7 +41,8 @@ export default {
 		return {
 			elapsed: 0,
 			undos: 0,
-			end: undefined
+			end: undefined,
+			endPlayer: undefined,
 		}
 	},
 	created() {
@@ -58,6 +59,9 @@ export default {
 	methods: {
 		main_menu() {
 			fetch('/api/restart')
+		},
+		retry() {
+			
 		},
 		undo() {
 			GameSocket.Get().send(JSON.stringify({
@@ -98,8 +102,14 @@ function handleWsMessage(m, self) {
 			console.log(msg.message);
 			break;
 		}
-		case "won/lost": {
-			console.log("won/lost");
+		case "lost": {
+			self.endPlayer = msg.username;
+			self.end = "lost";
+			break;
+		}
+		case "won": {
+			self.endPlayer = msg.username;
+			self.end = "won";
 			break;
 		}
 		case "update": {
