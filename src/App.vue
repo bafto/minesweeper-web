@@ -2,13 +2,13 @@
 	<header>
 		<div id="header-title">
 			<router-link to="/">
-				<img id="logo" src='images/logo.png' alt="minesweeper logo" width="32px" height="32px" title="go back">
+				<img id="logo" src='/images/logo.png' alt="minesweeper logo" width="32px" height="32px" title="go back">
 			</router-link>
 			<h1>Minesweeper</h1>
 		</div>
 		<div>
 			<a href="https://github.com/bafto/minesweeper-web" target="_blank">
-				<img invert src='images/github.svg' alt="github logo" width="32px" height="32px" title="Github">
+				<img invert src='/images/github.svg' alt="github logo" width="32px" height="32px" title="Github">
 			</a>
 		</div>
 	</header>

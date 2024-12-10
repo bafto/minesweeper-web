@@ -8,6 +8,7 @@ import SettingsPage from './components/pages/SettingsPage.vue';
 import AboutPage from './components/pages/AboutPage.vue';
 import SingleplayerPage from './components/pages/SingleplayerPage.vue';
 import MultiplayerPage from './components/pages/MultiplayerPage.vue';
+import './registerServiceWorker'
 
 const routes = [
 	{ path: '/', component: SelectGamemodePage },

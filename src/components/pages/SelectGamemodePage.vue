@@ -1,6 +1,7 @@
 <template>
 	<div id="mode-select">
 		<h1>Select a game mode</h1>
+		<h1 :v-if="!navigator.onLine">Offline!</h1>
 		<RouterLink to="/start-singleplayer" class="btn">Play Singleplayer</RouterLink>
 		<RouterLink to="/create-lobby" class="btn">Create Multiplayer Lobby</RouterLink>
 		<RouterLink to="/join-lobby" class="btn">Join Multiplayer Lobby</RouterLink>

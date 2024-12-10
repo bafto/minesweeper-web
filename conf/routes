@@ -3,9 +3,8 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-# An example controller showing a sample home page
-GET     /                           controllers.HomeController.minesweeper()
-GET     /about                      controllers.HomeController.about()
+# Load index page
+GET		/                 			controllers.Assets.at(path="/public", file="index.html")
 
 GET		/api/retry					controllers.HomeController.retry()
 GET		/api/restart				controllers.HomeController.restart()
@@ -16,5 +15,5 @@ GET 	/api/ws/multiplayer 		controllers.HomeController.multiplayer_websocket()
 POST 	/api/select_multiplayer 	controllers.HomeController.select_multiplayer()
 POST 	/api/start_multiplayer	 	controllers.HomeController.start_multiplayer()
 
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+# Map static resources from the /public folder to the file resource path
+GET     /*file             			controllers.Assets.at(path="/public", file)

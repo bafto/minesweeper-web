@@ -100,17 +100,17 @@ function getCellXY(cell) {
     filter: brightness(120%);
 }
 
-.cell.unrevealed { background-image: url(/public/images/unrevealed.png); }
-.cell.revealed { background-image: url(/public/images/revealed.png); }
-.cell.bomb { background-image: url(/public/images/bomb.png); }
-.cell.flagged { background-image: url(/public/images/flagged.png); }
-.cell.revealed-1 { background-image: url(/public/images/1.png); }
-.cell.revealed-2 { background-image: url(/public/images/2.png); }
-.cell.revealed-3 { background-image: url(/public/images/3.png); }
-.cell.revealed-4 { background-image: url(/public/images/4.png); }
-.cell.revealed-5 { background-image: url(/public/images/5.png); }
-.cell.revealed-6 { background-image: url(/public/images/6.png); }
-.cell.revealed-7 { background-image: url(/public/images/7.png); }
-.cell.revealed-8 { background-image: url(/public/images/8.png); }
+.cell.unrevealed { background-image: url(/assets/images/unrevealed.png); }
+.cell.revealed { background-image: url(/assets/images/revealed.png); }
+.cell.bomb { background-image: url(/assets/images/bomb.png); }
+.cell.flagged { background-image: url(/assets/images/flagged.png); }
+.cell.revealed-1 { background-image: url(/assets/images/1.png); }
+.cell.revealed-2 { background-image: url(/assets/images/2.png); }
+.cell.revealed-3 { background-image: url(/assets/images/3.png); }
+.cell.revealed-4 { background-image: url(/assets/images/4.png); }
+.cell.revealed-5 { background-image: url(/assets/images/5.png); }
+.cell.revealed-6 { background-image: url(/assets/images/6.png); }
+.cell.revealed-7 { background-image: url(/assets/images/7.png); }
+.cell.revealed-8 { background-image: url(/assets/images/8.png); }
 
 </style>

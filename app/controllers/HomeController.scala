@@ -68,14 +68,6 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
     controller
   }
 
-  def minesweeper() = Action {
-    gameObserver.getState match {
-      case GameState.NotStarted => Ok(views.html.start())
-      case GameState.Won | GameState.Lost | GameState.Running =>
-        Ok(views.html.game())
-    }
-  }
-
   def restart() = Action {
     minesweeperController.setup()
     Redirect("/")
@@ -104,10 +96,6 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
         )
         Redirect("/")
       }
-  }
-
-  def about() = Action {
-    Ok(views.html.about())
   }
 
   def websocket() = WebSocket.accept[JsValue, JsValue] { request =>
