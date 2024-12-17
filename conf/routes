@@ -6,6 +6,7 @@
 # Load index page
 GET		/                 			controllers.Assets.at(path="/public", file="index.html")
 
+GET		/api/health					controllers.HomeController.health()
 GET		/api/retry					controllers.HomeController.retry()
 GET		/api/restart				controllers.HomeController.restart()
 GET		/api/lobbies				controllers.HomeController.getLobbies()

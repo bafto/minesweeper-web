@@ -26,6 +26,7 @@ import play.api.libs.json.JsBoolean
 import play.api.libs.streams.ActorFlow
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.actor.Props
+import play.api.http.ContentTypes
 
 type StartOpts = (Int, Int, Float, Int)
 
@@ -96,6 +97,10 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
         )
         Redirect("/")
       }
+  }
+
+  def health() = Action {
+    Ok(Json.obj("healthy" -> true)).as(ContentTypes.JSON)
   }
 
   def websocket() = WebSocket.accept[JsValue, JsValue] { request =>
