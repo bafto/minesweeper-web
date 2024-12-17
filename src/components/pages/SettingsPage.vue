@@ -109,7 +109,7 @@ function getCookieByName(name) {
 }
 
 function start_multiplayer_ws(username, self) {
-	const socket = GameSocket.Connect(`ws://localhost:9000/api/ws/multiplayer?username=${username}&lobby=${username}`);
+	const socket = GameSocket.Connect(`/api/ws/multiplayer?username=${username}&lobby=${username}`);
 	socket.onopen = () => {
 		console.log("ws open");
 		self.waiting = true;

@@ -27,7 +27,7 @@ export default {
 				return;
 			}
 
-			const socket = GameSocket.Connect(`ws://localhost:9000/api/ws/multiplayer?username=${this.username}&lobby=${this.lobby.name}`)
+			const socket = GameSocket.Connect(`/api/ws/multiplayer?username=${this.username}&lobby=${this.lobby.name}`)
 			socket.onopen = () => {
 				console.log("ws open");
 			};

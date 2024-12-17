@@ -40,7 +40,7 @@ export default {
 	},
 	created() {
 		let self = this;
-		const gameSocket = GameSocket.Connect("ws://localhost:9000/api/ws/singleplayer")
+		const gameSocket = GameSocket.Connect("/api/ws/singleplayer")
 		gameSocket.onopen = () => {
 			console.log("ws open");
 			gameSocket.send(JSON.stringify({ type: "open" }));
