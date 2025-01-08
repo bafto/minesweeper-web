@@ -5,6 +5,7 @@
 				<img id="logo" src='images/logo.png' alt="minesweeper logo" width="32px" height="32px" title="go back">
 			</router-link>
 			<h1>Minesweeper</h1>
+			<router-link to="/register">Register or sign in</router-link>
 		</div>
 		<div>
 			<a href="https://github.com/bafto/minesweeper-web" target="_blank">

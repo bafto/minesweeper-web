@@ -8,6 +8,7 @@ import SettingsPage from './components/pages/SettingsPage.vue';
 import AboutPage from './components/pages/AboutPage.vue';
 import SingleplayerPage from './components/pages/SingleplayerPage.vue';
 import MultiplayerPage from './components/pages/MultiplayerPage.vue';
+import RegisterPage from './components/pages/RegisterPage.vue';
 
 const routes = [
 	{ path: '/', component: SelectGamemodePage },
@@ -17,6 +18,7 @@ const routes = [
 	{ path: '/singleplayer', component: SingleplayerPage },
 	{ path: '/join-lobby', component: JoinLobbyPage },
 	{ path: '/multiplayer', component: MultiplayerPage, props: route => ({ players: route.query.players, username: route.query.username }), },
+	{ path: '/register', component: RegisterPage}
 ];
 
 const router = createRouter({
