@@ -13,9 +13,9 @@ export default {
 	name: "LobbyCard",
 	props: {
 		lobby: {
-            type: Object,
-            required: true,
-        },
+			type: Object,
+			required: true,
+		},
 		username: {
 			type: String,
 			required: true
@@ -65,27 +65,27 @@ function handleWsMessage(m, self) {
 <style scoped>
 
 .lobby-card {
-    display: grid;
-    width: 90%;
-    height: 2rem;
-    padding: .5rem;
-    grid-template-columns: 3fr 1fr 1fr;
-    align-items: center;
-    background-color: var(--dark-color);
-    border-radius: 1rem;
-    border: var(--medium-color) inset 1px;
-}
+	display: grid;
+	width: 90%;
+	height: 2rem;
+	padding: .5rem;
+	grid-template-columns: 3fr 1fr 1fr;
+	align-items: center;
+	background-color: var(--dark-color);
+	border-radius: 1rem;
+	border: var(--medium-color) inset 1px;
 
-.lobby-card span {
-    align-content: center;
-    padding: .5rem;
-    border-right: 1px var(--highlight-color) solid;
-}
+	span {
+		align-content: center;
+		padding: .5rem;
+		border-right: 1px var(--highlight-color) solid;
+	}
 
-.lobby-card button {
-    height: 2rem;
-    width: 5rem;
-    margin: auto;
+	button {
+		height: 2rem;
+		width: 5rem;
+		margin: auto;
+	}
 }
 
 </style>

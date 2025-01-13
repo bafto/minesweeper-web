@@ -22,7 +22,7 @@
 	</main>
 
 	<footer>
-		<router-link to="/about">Über Minesweeper</router-link>
+		<router-link to="/about">About Minesweeper</router-link>
 	</footer>
 </template>
 
@@ -59,55 +59,63 @@ export default {
 
 <style>
 :root {
-    font-family: "Roboto Light", Arial, Helvetica, sans-serif;
+	font-family: "Roboto Light", Arial, Helvetica, sans-serif;
 
-    --text-color: #eaeaea;
-    --medium-color: #333;
-    --dark-color: #222;
-    --light-color: #444;
-    --highlight-color: #555;
+	--text-color: #eaeaea;
+	--medium-color: #333;
+	--dark-color: #222;
+	--light-color: #444;
+	--highlight-color: #555;
 }
 
 :link,
 a:visited {
-    color: var(--text-color)
+	color: var(--text-color)
 }
 
 img[invert] {
-    filter: invert();
+	filter: invert();
 }
 
 html, body {
-    height: 100%;
+	height: 100%;
 	margin: 0;
-    padding: 0;
+	padding: 0;
 }
 
 #app {
-    height: 100%;
-    color: var(--text-color);
-    background-color: var(--medium-color);
-    display: flex;
-    flex-direction: column;
+	height: 100%;
+	color: var(--text-color);
+	background-color: var(--medium-color);
+	display: flex;
+	flex-direction: column;
 	justify-content: space-between;
 }
 
 header {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: var(--dark-color);
-    padding: 0 1rem;
-    height: 80px;
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	justify-content: space-between;
+	background-color: var(--dark-color);
+	padding: 0 1rem;
+	height: 80px;
+
+	#logo {
+		transition: transform 1s ease;
+
+		&:hover {
+			transform: rotate(360deg);
+		}
+	}
 }
 
 #header-title {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    text-decoration: none;
-    gap: 1rem;
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	text-decoration: none;
+	gap: 1rem;
 }
 
 #header-right {
@@ -117,113 +125,105 @@ header {
 
 
 @media screen and (max-width: 500px) {
-    #header-title h1 {
-        font-size: 1.5rem;
-    }
+	#header-title h1 {
+		font-size: 1.5rem;
+	}
 }
 
 @media screen and (max-width: 320px) {
-    #header-title h1 {
-        display: none;
-    }
-}
-
-header #logo {
-    transition: transform 1s ease;
-}
-
-header #logo:hover {
-    transform: rotate(360deg);
+	#header-title h1 {
+		display: none;
+	}
 }
 
 main {
-    padding: 1rem;
-    height: 100%;
+	padding: 1rem;
+	height: 100%;
 }
 
 footer {
-    padding: 1rem;
+	padding: 1rem;
 }
 
 button, .btn {
-    text-align: center;
-    box-sizing: border-box;
-    border-width: 2px;
-    border-radius: .5rem;
-    padding: .5rem;
-    color: white;
-    background-color: var(--light-color);
-    border-style: outset;
-    border-color: var(--dark-color);
-    cursor: pointer;
-    transition: background-color 200ms linear;
+	text-align: center;
+	box-sizing: border-box;
+	border-width: 2px;
+	border-radius: .5rem;
+	padding: .5rem;
+	color: white;
+	background-color: var(--light-color);
+	border-style: outset;
+	border-color: var(--dark-color);
+	cursor: pointer;
+	transition: background-color 200ms linear;
 	text-decoration: none;
-}
 
-:is(button, .btn):disabled {
-    background-color: color-mix(in srgb, var(--light-color), transparent 60%);
-    border-color: color-mix(in srgb, var(--dark-color), transparent 60%);
-    color: color-mix(in srgb, white, transparent 60%);
-    cursor: revert;
+	&:disabled {
+		background-color: color-mix(in srgb, var(--light-color), transparent 60%);
+		border-color: color-mix(in srgb, var(--dark-color), transparent 60%);
+		color: color-mix(in srgb, white, transparent 60%);
+		cursor: revert;
+	}
 }
 
 input {
-    border-color: var(--dark-color);
-    background-color: var(--light-color);
-    color: white;
-    outline: none;
-    border-style: inset;
-    appearance: textfield; /* funktioniert für firefox, aber nicht chrome */
-    transition: background-color 200ms linear;
-}
+	border-color: var(--dark-color);
+	background-color: var(--light-color);
+	color: white;
+	outline: none;
+	border-style: inset;
+	appearance: textfield; /* funktioniert für firefox, aber nicht chrome */
+	transition: background-color 200ms linear;
 
-input:user-invalid {
-    border-color: red !important;
-    background-color: rgb(161, 77, 77) !important;
+	&:user-invalid {
+		border-color: red !important;
+		background-color: rgb(161, 77, 77) !important;
+	}
 }
 
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
-    appearance: none;
+	appearance: none;
 }
 
 /* style für sliders */
 input[type=range] {
-    appearance: none;
-    border-color: var(--dark-color);
-    background-color: var(--light-color);
-    border-style: inset;
-    cursor: pointer;
-    width: 100%;
-    padding: 1px 0;
-    border-width: 2px;
-    margin: 0;
+	appearance: none;
+	border-color: var(--dark-color);
+	background-color: var(--light-color);
+	border-style: inset;
+	cursor: pointer;
+	width: 100%;
+	padding: 1px 0;
+	border-width: 2px;
+	margin: 0;
+
+	/*  Style muss leider kopiert werden, da selector lists ignoriert werden,
+	wenn ein pseudo element, welches der Browser nicht kennt, vorhanden ist */
+
+	/* Slider Thumb style für webkit browsers */
+	&::-webkit-slider-thumb {
+		appearance: none;
+		height: 1rem;
+		width: 0.5rem;
+		border: 1px outset var(--dark-color);
+		background-color: var(--medium-color);
+		border-radius: 2px;
+	}
+
+	/* Slider Thumb für Firefox */
+	&::-moz-range-thumb {
+		appearance: none;
+		height: 1rem;
+		width: 0.5rem;
+		border: 1px outset var(--dark-color);
+		background-color: var(--medium-color);
+		border-radius: 2px;
+	}
 }
 
-/*  Style muss leider kopiert werden, da selector lists ignoriert werden,
-    wenn ein pseudo element, welches der Browser nicht kennt, vorhanden ist */
-
-/* Slider Thumb style für webkit browsers */
-input[type=range]::-webkit-slider-thumb {
-    appearance: none;
-    height: 1rem;
-    width: 0.5rem;
-    border: 1px outset var(--dark-color);
-    background-color: var(--medium-color);
-    border-radius: 2px;
-}
-
-/* Slider Thumb für Firefox */
-input[type=range]::-moz-range-thumb {
-    appearance: none;
-    height: 1rem;
-    width: 0.5rem;
-    border: 1px outset var(--dark-color);
-    background-color: var(--medium-color);
-    border-radius: 2px;
-}
-
-:is(button,input):not(:disabled):hover {
-    background-color: var(--highlight-color);
+:is(button, .btn, input):not(:disabled):hover {
+	background-color: var(--highlight-color);
 }
 </style>

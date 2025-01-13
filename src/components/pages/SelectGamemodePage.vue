@@ -34,15 +34,15 @@ export default {
 
 <style scoped>
 #mode-select {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    gap: 1rem;
-}
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	gap: 1rem;
 
-#mode-select :is(button, .btn) {
-    width: 40%;
+	:is(button, .btn) {
+		width: 40%;
+	}
 }
 </style>

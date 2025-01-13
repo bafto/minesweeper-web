@@ -80,38 +80,37 @@ function getCellXY(cell) {
 <style scoped>
 
 .game-grid {
-    display: grid;
-    width: var(--game-width);
-    grid-template-columns: repeat(var(--grid-width), var(--cell-size));
-    grid-template-rows: repeat(var(--grid-height), var(--cell-size));
-    padding: calc(var(--cell-size) / 2);
-    background-color: var(--dark-color);
-    border-radius: calc(var(--cell-size) / 2);
-    margin-top: 5px;
+	display: grid;
+	width: var(--game-width);
+	grid-template-columns: repeat(var(--grid-width), var(--cell-size));
+	grid-template-rows: repeat(var(--grid-height), var(--cell-size));
+	padding: calc(var(--cell-size) / 2);
+	background-color: var(--dark-color);
+	border-radius: calc(var(--cell-size) / 2);
+	margin-top: 5px;
 }
 
 .cell {
-    width: var(--cell-size);
-    height: var(--cell-size);
-    background-size: cover;
-    background-repeat: no-repeat;
+	width: var(--cell-size);
+	height: var(--cell-size);
+	background-size: cover;
+	background-repeat: no-repeat;
+
+	&.unrevealed { background-image: url(/assets/images/unrevealed.png); }
+	&.revealed { background-image: url(/assets/images/revealed.png); }
+	&.bomb { background-image: url(/assets/images/bomb.png); }
+	&.flagged { background-image: url(/assets/images/flagged.png); }
+	&.revealed-1 { background-image: url(/assets/images/1.png); }
+	&.revealed-2 { background-image: url(/assets/images/2.png); }
+	&.revealed-3 { background-image: url(/assets/images/3.png); }
+	&.revealed-4 { background-image: url(/assets/images/4.png); }
+	&.revealed-5 { background-image: url(/assets/images/5.png); }
+	&.revealed-6 { background-image: url(/assets/images/6.png); }
+	&.revealed-7 { background-image: url(/assets/images/7.png); }
+	&.revealed-8 { background-image: url(/assets/images/8.png); }
+
+	&:hover {
+		filter: brightness(120%);
+	}
 }
-
-.cell:hover {
-    filter: brightness(120%);
-}
-
-.cell.unrevealed { background-image: url(/assets/images/unrevealed.png); }
-.cell.revealed { background-image: url(/assets/images/revealed.png); }
-.cell.bomb { background-image: url(/assets/images/bomb.png); }
-.cell.flagged { background-image: url(/assets/images/flagged.png); }
-.cell.revealed-1 { background-image: url(/assets/images/1.png); }
-.cell.revealed-2 { background-image: url(/assets/images/2.png); }
-.cell.revealed-3 { background-image: url(/assets/images/3.png); }
-.cell.revealed-4 { background-image: url(/assets/images/4.png); }
-.cell.revealed-5 { background-image: url(/assets/images/5.png); }
-.cell.revealed-6 { background-image: url(/assets/images/6.png); }
-.cell.revealed-7 { background-image: url(/assets/images/7.png); }
-.cell.revealed-8 { background-image: url(/assets/images/8.png); }
-
 </style>

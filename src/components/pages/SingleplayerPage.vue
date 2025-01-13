@@ -115,59 +115,59 @@ function handleWsMessage(msg, self) {
 
 <style>
 :root {
-    --player-count: 1;
-    --cell-size: clamp(16px, round(calc(5vw / var(--player-count)), 1px), 32px);
-    --game-width: calc(var(--grid-width) * var(--cell-size));
+	--player-count: 1;
+	--cell-size: clamp(16px, round(calc(5vw / var(--player-count)), 1px), 32px);
+	--game-width: calc(var(--grid-width) * var(--cell-size));
 }
 </style>
 <style scoped>
 #game {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 #stat-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 2rem;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 2rem;
 }
 
 #end-overlay {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: rgb(0 0 0 / 70%);
-    width: calc(var(--grid-height) * var(--cell-size));
-    height: calc(var(--grid-height) * var(--cell-size));
-    margin: 1rem;
-    z-index: 1;
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: rgb(0 0 0 / 70%);
+	width: calc(var(--grid-height) * var(--cell-size));
+	height: calc(var(--grid-height) * var(--cell-size));
+	margin: 1rem;
+	z-index: 1;
 }
 
 #grids-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
 }
 
 #button-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 2rem;
-    width: var(--grid-width);
-    gap: 10px;
-}
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 2rem;
+	width: var(--grid-width);
+	gap: 10px;
 
-#button-container button {
-    text-wrap: nowrap;
-    width: 100%
+	button {
+		text-wrap: nowrap;
+		width: 100%
+	}
 }
 </style>

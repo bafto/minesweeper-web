@@ -184,52 +184,50 @@ function handleWsMessage(m, self) {
 }
 
 #settings {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    --inputs-grid: 3fr 2fr;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	--inputs-grid: 3fr 2fr;
 }
 
 #settings-inputs {
-    display: grid;
-    grid-template-columns: var(--inputs-grid);
-    width: 60%;
-    margin-bottom: 2rem;
-    row-gap: 5px;
+	display: grid;
+	grid-template-columns: var(--inputs-grid);
+	width: 60%;
+	margin-bottom: 2rem;
+	row-gap: 5px;
+
+	@media screen and (max-width: 500px) {
+		grid-template-columns: none;
+		grid-template-rows: var(--inputs-grid);
+	}
 }
 
 #range-wrapper {
-    display: grid;
-    grid-template-columns: auto 4ch;
-    gap: 10px;
-    align-items: center;
+	display: grid;
+	grid-template-columns: auto 4ch;
+	gap: 10px;
+	align-items: center;
 }
 
 #settings-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 2rem;
-    width: 60%;
-}
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	gap: 2rem;
+	width: 60%;
 
-#settings-buttons .btn {
-    width: 100%;
-    text-wrap: nowrap;
-}
-
-@media screen and (max-width: 500px) {
-    #settings-inputs {
-        grid-template-columns: none;
-        grid-template-rows: var(--inputs-grid);
-    }
+	.btn {
+		width: 100%;
+		text-wrap: nowrap;
+	}
 }
 
 @media screen and (max-width: 320px) {
-    #settings-buttons button {
-        text-wrap: wrap;
-    }
+	#settings-buttons button {
+		text-wrap: wrap;
+	}
 }
 </style>

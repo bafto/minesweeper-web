@@ -53,13 +53,13 @@
 	color: #b0b0b0;
 	font-weight: bold;
 	transition: background-color 0.3s, color 0.3s;
-}
 
-#tabs button.active {
-	background-color: #2b2b2b;
-	border: 1px solid #444;
-	border-bottom: none;
-	color: #fff;
+	&.active {
+		background-color: #2b2b2b;
+		border: 1px solid #444;
+		border-bottom: none;
+		color: #fff;
+	}
 }
 
 #form {
@@ -85,11 +85,11 @@ button {
 	cursor: pointer;
 	font-weight: bold;
 	transition: background-color 0.3s, transform 0.2s;
-}
 
-button:disabled {
-	background-color: #555;
-	cursor: not-allowed;
+	&:disabled {
+		background-color: #555;
+		cursor: not-allowed;
+	}
 }
 </style>
 

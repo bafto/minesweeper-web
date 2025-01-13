@@ -44,29 +44,31 @@ export default {
 
 <style scoped>
 #lobby-list {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 
-#lobby-list #opts {
-    height: 2rem;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
+	#opts {
+		height: 2rem;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 1rem;
+		margin-bottom: 1rem;
 
-#lobby-list #opts input { height: 1rem; }
+		input {
+			height: 1rem;
+		}
+	}
+}
 
 #cards {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
 }
 </style>
