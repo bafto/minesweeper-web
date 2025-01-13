@@ -13,4 +13,20 @@ module.exports = defineConfig({
 			}
 		}
 	},
+	pwa: {
+		iconPaths: {
+			faviconSVG: null,
+			favicon32: 'favicon.ico',
+			favicon16: 'favicon.ico',
+			appleTouchIcon: null,
+			maskIcon: null,
+			msTileImage: null,
+		},
+	},
+	chainWebpack: config => {
+		config.plugin('html').tap(args => {
+			args[0].favicon = 'public/favicon.ico'; // Explicitly set the favicon path
+			return args;
+		});
+	},
 })

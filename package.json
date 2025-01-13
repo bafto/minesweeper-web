@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "rm -rf public && vue-cli-service build && mv dist public && cp -r assets/* public",
+    "build": "rm -rf public && mkdir public && cp -r assets/* public && vue-cli-service build && cp -r dist/* public",
     "deploy": "npm run build && sbt clean dist && docker build -t bafto/hetzner:Minesweeper . && docker image push bafto/hetzner:Minesweeper",
     "lint": "vue-cli-service lint"
   },
