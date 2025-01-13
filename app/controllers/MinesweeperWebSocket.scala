@@ -149,6 +149,8 @@ class MultiplayerWebsocketActor(
             case JsSuccess(xy, _) => reveal(xy)
             case e: JsError       => println(e)
           }
+        case "restart" => this.player.restart()
+        case "retry"   => {}
       }
     }
   }
@@ -165,8 +167,16 @@ class MultiplayerWebsocketActor(
     println("websocket closed")
   }
 
-  def update(ev: (String, Event, MinesweeperController, Long)): Unit = {
-    val (user, e, controller, time) = ev
+  def update(
+      ev: (String, Event, MinesweeperController, Long, Boolean)
+  ): Unit = {
+    val (user, e, controller, time, restart) = ev
+
+    if restart then {
+      out ! Json.obj("type" -> "restart");
+      return
+    }
+
     e match {
       case SetupEvent() => println("setup" + user)
       case LostEvent() =>
@@ -200,7 +210,7 @@ class MultiplayerWebsocketActor(
 class Player(
     val username: String,
     val dcCallback: (Player) => Unit
-) extends Observable[(String, Event, MinesweeperController, Long)]
+) extends Observable[(String, Event, MinesweeperController, Long, Boolean)]
     with Observer[Event] {
 
   var ws: MultiplayerWebsocketActor = null
@@ -212,6 +222,9 @@ class Player(
       controller.removeObserver(this)
     }
     dcCallback(this)
+  }
+  def restart() = {
+    this.notifyObservers((null, null, null, 0, true))
   }
 
   var controller: MinesweeperController = null
@@ -230,7 +243,7 @@ class Player(
       case StartGameEvent(_) => start_time = current_time_seconds
       case _                 => {}
     }
-    this.notifyObservers((username, e, this.controller, getTime))
+    this.notifyObservers((username, e, this.controller, getTime, false))
   }
 }
 
@@ -238,7 +251,7 @@ class MultiplayerWebsocketDispatcher(
     val players: Map[String, Player],
     val startOpts: StartOpts
 ) extends Observable[(String, GameState)]
-    with Observer[(String, Event, MinesweeperController, Long)] {
+    with Observer[(String, Event, MinesweeperController, Long, Boolean)] {
   for (_, player) <- players do player.addObserver(this)
   for (_, player) <- players do
     player.ws.out ! Json.obj(
@@ -247,7 +260,9 @@ class MultiplayerWebsocketDispatcher(
     )
   for (_, player) <- players do player.controller.startGame.tupled(startOpts)
 
-  override def update(e: (String, Event, MinesweeperController, Long)): Unit =
+  override def update(
+      e: (String, Event, MinesweeperController, Long, Boolean)
+  ): Unit =
     for (_, player) <- players do {
       player.ws.update(e)
     }

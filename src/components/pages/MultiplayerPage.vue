@@ -59,10 +59,14 @@ export default {
 	},
 	methods: {
 		main_menu() {
-			fetch('/api/restart')
+			GameSocket.Get().send(JSON.stringify({
+				"type": "restart"
+			}));
 		},
 		retry() {
-			
+			GameSocket.Get().send(JSON.stringify({
+				"type": "retry"
+			}));
 		},
 		undo() {
 			GameSocket.Get().send(JSON.stringify({
@@ -99,6 +103,11 @@ function handleWsMessage(m, self) {
 	const msg = JSON.parse(m.data);
 
 	switch (msg.type) {
+		case "restart": {
+			GameSocket.Get().close();
+			self.$router.push({path: '/'});
+			break;
+		}
 		case "status": {
 			console.log(msg.message);
 			break;
