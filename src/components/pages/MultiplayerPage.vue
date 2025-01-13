@@ -127,6 +127,7 @@ function handleWsMessage(m, self) {
 				reload_page();
 				return;
 			}
+			self.end = undefined
 
 			if (msg.end) {
 				self.end = msg.end;

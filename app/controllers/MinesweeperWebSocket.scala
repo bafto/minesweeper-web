@@ -150,7 +150,7 @@ class MultiplayerWebsocketActor(
             case e: JsError       => println(e)
           }
         case "restart" => this.player.restart()
-        case "retry"   => {}
+        case "retry"   => this.player.retry()
       }
     }
   }
@@ -210,7 +210,9 @@ class MultiplayerWebsocketActor(
 class Player(
     val username: String,
     val dcCallback: (Player) => Unit
-) extends Observable[(String, Event, MinesweeperController, Long, Boolean)]
+) extends Observable[
+      (String, Event, MinesweeperController, Long, Boolean, Boolean)
+    ]
     with Observer[Event] {
 
   var ws: MultiplayerWebsocketActor = null
@@ -224,7 +226,10 @@ class Player(
     dcCallback(this)
   }
   def restart() = {
-    this.notifyObservers((null, null, null, 0, true))
+    this.notifyObservers((null, null, null, 0, true, false))
+  }
+  def retry() = {
+    this.notifyObservers((null, null, null, 0, false, true))
   }
 
   var controller: MinesweeperController = null
@@ -243,7 +248,7 @@ class Player(
       case StartGameEvent(_) => start_time = current_time_seconds
       case _                 => {}
     }
-    this.notifyObservers((username, e, this.controller, getTime, false))
+    this.notifyObservers((username, e, this.controller, getTime, false, false))
   }
 }
 
@@ -251,7 +256,9 @@ class MultiplayerWebsocketDispatcher(
     val players: Map[String, Player],
     val startOpts: StartOpts
 ) extends Observable[(String, GameState)]
-    with Observer[(String, Event, MinesweeperController, Long, Boolean)] {
+    with Observer[
+      (String, Event, MinesweeperController, Long, Boolean, Boolean)
+    ] {
   for (_, player) <- players do player.addObserver(this)
   for (_, player) <- players do
     player.ws.out ! Json.obj(
@@ -261,9 +268,18 @@ class MultiplayerWebsocketDispatcher(
   for (_, player) <- players do player.controller.startGame.tupled(startOpts)
 
   override def update(
-      e: (String, Event, MinesweeperController, Long, Boolean)
+      e: (String, Event, MinesweeperController, Long, Boolean, Boolean)
   ): Unit =
+    val (s, ev, c, t, r, retry) = e
+
+    if retry then {
+      // for (_, player) <- players do player.controller.setup()
+      for (_, player) <- players do
+        player.controller.startGame.tupled(startOpts)
+      return
+    }
+
     for (_, player) <- players do {
-      player.ws.update(e)
+      player.ws.update((s, ev, c, t, r))
     }
 }
