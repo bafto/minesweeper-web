@@ -10,7 +10,7 @@
 				<h1>You {{end}}!</h1>
 				<button @click="retry()">Retry</button>
 			</div>
-			<GameComponent ref="game_grid" :inputEnabled="true"></GameComponent>
+			<GameComponent ref="game_grid" :inputEnabled="!end"></GameComponent>
 		</div>
 		
 		<div id="button-container">
@@ -140,10 +140,6 @@ function handleWsMessage(msg, self) {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	background-color: rgb(0 0 0 / 70%);
-	width: calc(var(--grid-height) * var(--cell-size));
-	height: calc(var(--grid-height) * var(--cell-size));
-	margin: 1rem;
 	z-index: 1;
 }
 

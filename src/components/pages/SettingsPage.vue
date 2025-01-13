@@ -34,6 +34,7 @@
 
 <script>
 import GameSocket from '../../websocket.js';
+import { auth } from '../../firebaseConfig';
 
 export default {
 	name: 'SettingsComponent',
@@ -43,7 +44,7 @@ export default {
 	data() {
 		return {
 			waiting: false,
-			username: "dummy",
+			username: auth.currentUser ? auth.currentUser.displayName : "",
 			width: 10,
 			height: 10,
 			bomb_chance: 0.5,
@@ -53,7 +54,7 @@ export default {
 	computed: {
 		disableButtons() {
 			return !(this.width && this.height && this.max_undos && this.username.trim())
-		},
+		}
 	},
 	methods: {
 		startGame() {

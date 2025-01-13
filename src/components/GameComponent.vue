@@ -1,5 +1,5 @@
 <template>
-	<div class="game-grid">
+	<div class="game-grid" :aria-disabled="!inputEnabled">
 		<div v-for="cell in cells" :key="cell.x+cell.y" class="cell"
 			:class="getCellImgClass(cell.cell)" alt="cell" 
 			width="32px" height="32px" :cell-x="cell.x" :cell-y="cell.y"
@@ -88,6 +88,11 @@ function getCellXY(cell) {
 	background-color: var(--dark-color);
 	border-radius: calc(var(--cell-size) / 2);
 	margin-top: 5px;
+
+	&[aria-disabled=true] {
+		filter: brightness(20%) contrast(0.9);
+		pointer-events: none;
+	}
 }
 
 .cell {

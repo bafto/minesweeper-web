@@ -9,7 +9,7 @@
 		</div>
 		<div id="header-right">
 			<div id="user-control">
-				<span>{{ currentUser === null ? "Not Logged in" : "Hello, " + currentUser.displayName }}</span>
+				<span>{{ currentUser === null ? "Not logged in" : "Hello, " + currentUser.displayName }}</span>
 				<router-link to="/register" v-if="currentUser === null">Register or sign in</router-link>
 				<a href="" v-if="currentUser !== null" @click="logout()">Log out</a>
 			</div>
@@ -111,7 +111,6 @@ header {
 		}
 	}
 }
-
 
 #user-control {
 	display: flex;

@@ -5,13 +5,13 @@
 			<button :class="{ active: isRegisterTab }" @click="isRegisterTab = true">Register</button>
 			<button :class="{ active: !isRegisterTab }" @click="isRegisterTab = false">Sign in</button>
 		</div>
-		<div id="form">
-			<input  v-if="isRegisterTab" type="text" placeholder="Username" v-model="username" />
-			<input type="text" placeholder="Email" v-model="email" />
-			<input type="password" placeholder="Password" v-model="password" />
+		<div id="form" @submit.prevent="">
+			<input v-if="isRegisterTab" type="text" placeholder="Username" v-model="username" required />
+			<input type="text" placeholder="Email" v-model="email" required />
+			<input type="password" placeholder="Password" v-model="password" required />
 			<div id="btn-group">
-				<button v-if="isRegisterTab" @click="register">Register</button>
-				<button v-else @click="login">Sign in</button>
+				<button v-if="isRegisterTab" @click="register" type="submit">Register</button>
+				<button v-else @click="login" type="submit">Sign in</button>
 			</div>
 		</div>
 	</div>

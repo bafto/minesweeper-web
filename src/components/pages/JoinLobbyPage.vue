@@ -16,6 +16,7 @@
 
 <script>
 import LobbyCard from '../LobbyCard.vue';
+import { auth } from '../../firebaseConfig';
 
 export default {
 	name: 'JoinLobbyPage',
@@ -24,7 +25,7 @@ export default {
 	},
 	data() {
 		return {
-			username: '',
+			username: auth.currentUser ? auth.currentUser.displayName : "",
 			lobbies: [],
 		}
 	},
