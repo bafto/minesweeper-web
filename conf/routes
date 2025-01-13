@@ -7,10 +7,7 @@
 GET		/                 			controllers.Assets.at(path="/public", file="index.html")
 
 GET		/api/health					controllers.HomeController.health()
-GET		/api/retry					controllers.HomeController.retry()
-GET		/api/restart				controllers.HomeController.restart()
 GET		/api/lobbies				controllers.HomeController.getLobbies()
-POST 	/api/start_game 			controllers.HomeController.start_game()
 GET 	/api/ws/singleplayer 		controllers.HomeController.websocket()
 GET 	/api/ws/multiplayer 		controllers.HomeController.multiplayer_websocket()
 POST 	/api/select_multiplayer 	controllers.HomeController.select_multiplayer()

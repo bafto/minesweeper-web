@@ -40,25 +40,24 @@ export default {
 	},
 	created() {
 		let self = this;
-		const gameSocket = GameSocket.Connect("/api/ws/singleplayer")
-		gameSocket.onopen = () => {
-			console.log("ws open");
-			gameSocket.send(JSON.stringify({ type: "open" }));
-		};
+		const gameSocket = GameSocket.Get();
 		gameSocket.onclose = () => console.log("ws close");
 		gameSocket.onerror = () => console.error("ws error");
 		gameSocket.onmessage = (msg) => handleWsMessage(msg, self);
 	},
 	methods: {
 		main_menu() {
-			fetch('/api/restart');
+			GameSocket.Get().send(JSON.stringify({
+				"type": "restart"
+			}))
 			this.$router.push({path: '/'});
 		},
 		retry() {
 			const self = this;
-			fetch('/api/retry').then(() => {
-				self.end = undefined;
-			})
+			GameSocket.Get().send(JSON.stringify({
+				"type": "retry"
+			}))
+			self.end = undefined;
 		},
 		undo() {
 			GameSocket.Get().send(JSON.stringify({

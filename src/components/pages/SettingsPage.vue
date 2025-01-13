@@ -56,21 +56,19 @@ export default {
 			return !(this.width && this.height && this.max_undos && this.username.trim())
 		}
 	},
+	watch: {
+		width(val) {
+			console.log('width changed', val);
+		}
+	},
 	methods: {
 		startGame() {
-			fetch('/api/start_game', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Csrf-Token': getCookieByName('play-csrf-token'),
-				},
-				body: JSON.stringify({
-					width: this.width,
-					height: this.height,
-					bomb_chance: parseFloat(this.bomb_chance),
-					max_undos: this.max_undos
-				})
-			}).catch(console.error);
+			console.log(this.width);
+			const gameSocket = GameSocket.Connect(`/api/ws/singleplayer?width=${this.width}&height=${this.height}&bomb_chance=${this.bomb_chance}&max_undos=${this.max_undos}`)
+		gameSocket.onopen = () => {
+			console.log("ws open");
+			gameSocket.send(JSON.stringify({ type: "open" }));
+		};
 		},
 		async selectMultiplayer() {
 			fetch('/api/select_multiplayer', {

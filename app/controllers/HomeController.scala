@@ -60,41 +60,9 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
     implicit val system: ActorSystem
 ) extends BaseController {
 
-  val gameObserver = GameObserver()
-  val minesweeperController = {
-    val controller =
-      MinesweeperController(RandomFieldFactory(Random()), FileIO())
-    controller.setup()
-    controller.addObserver(gameObserver)
-    controller
-  }
-
-  def restart() = Action {
-    minesweeperController.setup()
-    Redirect("/")
-  }
-
-  def retry() = Action {
-    val gameState = minesweeperController.getGameState
-    minesweeperController.setup()
-    minesweeperController.startGame(
-      gameState.width,
-      gameState.height,
-      gameState.bombChance,
-      gameState.maxUndos
-    )
-    Redirect("/")
-  }
-
   def start_game(): Action[JsValue] = Action(parse.json) {
     (request: Request[JsValue]) =>
       {
-        minesweeperController.startGame(
-          (request.body \ "width").as[Int],
-          (request.body \ "height").as[Int],
-          (request.body \ "bomb_chance").as[Float],
-          (request.body \ "max_undos").as[Int]
-        )
         Redirect("/")
       }
   }
@@ -105,7 +73,23 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)(
 
   def websocket() = WebSocket.accept[JsValue, JsValue] { request =>
     ActorFlow.actorRef { out =>
-      println("recieved websocket connection")
+      println("received websocket connection")
+      val gameObserver = GameObserver()
+      val minesweeperController = {
+        val controller =
+          MinesweeperController(RandomFieldFactory(Random()), FileIO())
+        controller.setup()
+        controller.addObserver(gameObserver)
+        controller
+      }
+      println("width");
+      println(request.getQueryString("width").get.toInt);
+      minesweeperController.startGame(
+        request.getQueryString("width").get.toInt,
+        request.getQueryString("height").get.toInt,
+        request.getQueryString("bomb_chance").get.toFloat,
+        request.getQueryString("max_undos").get.toInt
+      )
       MinesweeperWebSocketActorFactory.create(
         out,
         minesweeperController,

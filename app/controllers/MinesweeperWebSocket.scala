@@ -61,6 +61,19 @@ class MinesweeperWebSocketActor(
             case JsSuccess(xy, _) => reveal(xy)
             case e: JsError       => println(e)
           }
+        case "restart" => {
+          controller.setup()
+        }
+        case "retry" => {
+          val gameState = controller.getGameState
+          controller.setup()
+          controller.startGame(
+            gameState.width,
+            gameState.height,
+            gameState.bombChance,
+            gameState.maxUndos
+          )
+        }
       }
     }
   }
