@@ -8,9 +8,11 @@
 			
 		</div>
 		<div id="header-right">
-			<span>{{ currentUser === null ? "Not Logged in" : "Hello, " + currentUser.displayName }}</span>
-			<router-link to="/register" v-if="currentUser === null">Register or sign in</router-link>
-			<a href="" v-if="currentUser !== null" @click="logout()">Log out</a>
+			<div id="user-control">
+				<span>{{ currentUser === null ? "Not Logged in" : "Hello, " + currentUser.displayName }}</span>
+				<router-link to="/register" v-if="currentUser === null">Register or sign in</router-link>
+				<a href="" v-if="currentUser !== null" @click="logout()">Log out</a>
+			</div>
 			<a href="https://github.com/bafto/minesweeper-web" target="_blank">
 				<img invert src='/images/github.svg' alt="github logo" width="32px" height="32px" title="Github">
 			</a>
@@ -108,6 +110,12 @@ header {
 			transform: rotate(360deg);
 		}
 	}
+}
+
+
+#user-control {
+	display: flex;
+	flex-direction: column;
 }
 
 #header-title {
