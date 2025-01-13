@@ -11,6 +11,7 @@
 				<button @click="retry()">Retry</button>
 			</div>
 			<div v-for="player in players" :key="player">
+				<span>{{ player }}</span>
 				<GameComponent :ref="player" :inputEnabled="player === username"></GameComponent>
 			</div>
 		</div>
@@ -165,7 +166,7 @@ function reload_page() {
     align-items: center;
     justify-content: center;
     background-color: rgb(0 0 0 / 70%);
-    width: calc(var(--grid-height) * var(--cell-size));
+    width: calc(var(--grid-height) * var(--cell-size) * var(--player-count));
     height: calc(var(--grid-height) * var(--cell-size));
     margin: 1rem;
     z-index: 1;

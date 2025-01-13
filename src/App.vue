@@ -5,9 +5,12 @@
 				<img id="logo" src='/images/logo.png' alt="minesweeper logo" width="32px" height="32px" title="go back">
 			</router-link>
 			<h1>Minesweeper</h1>
-			<router-link to="/register">Register or sign in</router-link>
+			
 		</div>
-		<div>
+		<div id="header-right">
+			<span>{{ currentUser === null ? "Not Logged in" : "Hello, " + currentUser.displayName }}</span>
+			<router-link to="/register" v-if="currentUser === null">Register or sign in</router-link>
+			<a href="" v-if="currentUser !== null" @click="logout()">Log out</a>
 			<a href="https://github.com/bafto/minesweeper-web" target="_blank">
 				<img invert src='/images/github.svg' alt="github logo" width="32px" height="32px" title="Github">
 			</a>
@@ -24,6 +27,8 @@
 </template>
 
 <script>
+import { auth } from './firebaseConfig';
+
 export default {
 	name: 'App',
 	data() {
@@ -34,8 +39,20 @@ export default {
 			height: 10,
 			bomb_chance: 0.5,
 			max_undos: 3,
-			socket: null
+			socket: null,
+			currentUser: null
 		};
+	},
+	created() {
+		let a = this;
+		auth.onAuthStateChanged(function(user) {
+			a.currentUser = user
+		})
+	},
+	methods: {
+		logout() {
+			auth.signOut()
+		}
 	}
 }
 </script>
@@ -91,6 +108,11 @@ header {
     flex-direction: row;
     text-decoration: none;
     gap: 1rem;
+}
+
+#header-right {
+	display: flex;
+	gap: 1rem;
 }
 
 

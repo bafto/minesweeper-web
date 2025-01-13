@@ -101,10 +101,10 @@ button:disabled {
 		name: 'RegisterPage',
 		data() {
 			return {
-				isRegisterTab: true, // Track which tab is active
+				isRegisterTab: true,
 				email: '',
 				password: '',
-				username: '', // For the display name in the Register tab
+				username: '',
 			};
 		},
 		methods: {
@@ -116,7 +116,6 @@ button:disabled {
 				createUserWithEmailAndPassword(auth, this.email, this.password)
 					.then((userCredential) => {
 						const user = userCredential.user;
-						// Set the display name
 						return updateProfile(user, { displayName: this.username });
 					})
 					.then(() => {
@@ -132,7 +131,7 @@ button:disabled {
 				signInWithEmailAndPassword(auth, this.email, this.password)
 					.then((data) => {
 						console.log(data)
-						console.log('Successfully logged in!');
+						console.log(`Successfully logged in as ${data.user.displayName}!`);
 						this.$router.push('/');
 					})
 					.catch((error) => {

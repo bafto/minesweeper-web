@@ -87,6 +87,7 @@ function getCellXY(cell) {
     padding: calc(var(--cell-size) / 2);
     background-color: var(--dark-color);
     border-radius: calc(var(--cell-size) / 2);
+    margin-top: 5px;
 }
 
 .cell {
